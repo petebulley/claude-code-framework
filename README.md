@@ -34,6 +34,14 @@ The framework uses [Claude Code skills](https://docs.anthropic.com/en/docs/claud
 
    The skill will scaffold your documentation, walk you through creating the master plan, and configure Claude's permissions. From there, follow the steps below in order.
 
+   **Existing project?** If you already have a project and want to bring it into the framework, use:
+
+   ```
+   /adopt
+   ```
+
+   This will audit your project, map what exists against the framework, and create a plan to fill the gaps — preserving your existing code and conventions.
+
 ### Recommended: Playwright MCP
 
 For visual verification during design and implementation, set up the Playwright MCP:
@@ -255,6 +263,7 @@ Skills used throughout the project lifecycle, not tied to a specific step.
 
 | Skill | Description |
 |-------|-------------|
+| `/adopt` | Retroactively apply the framework to an existing project. Audits what exists, maps it against framework expectations, and creates a plan to fill gaps — preserving existing code and conventions. |
 | `/new-issue` | Quickly capture a bug, feature idea, or improvement to `docs/tasks.md` without breaking your current flow. Designed for speed — log it and get back to work. |
 | `/status` | Check where the project stands — implementation progress, open tasks, UAT results, recent activity — and get a recommendation for what to do next. |
 
