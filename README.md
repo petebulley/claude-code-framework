@@ -66,7 +66,7 @@ Updated skills are available immediately in your next Claude Code session — no
 
 ## Overview
 
-**Steps 1-6** take you from idea to deployed, tested product. Run them in order for the initial build. **Step 7** is your ongoing development workflow — use it for all work after the initial build is complete.
+**Steps 1-6** take you from idea to deployed, tested product. Run them in order for the initial build. **Step 7** is your ongoing development workflow — use it for all work after the initial build is complete. **Already have a project?** Use `/adopt` to retrofit the framework — see [Adopting the Framework for Existing Projects](#adopting-the-framework-for-existing-projects).
 
 | Step | Name | Skill | Output |
 |------|------|-------|--------|
@@ -257,13 +257,60 @@ Ongoing development — bug fixes, new features, tweaks, and refactors. This is 
 
 ---
 
+## Adopting the Framework for Existing Projects
+
+Already have a project? Use `/adopt` to bring it into the framework without starting from scratch.
+
+**Skill:** `/adopt`
+**When:** You have an existing project with code, possibly some documentation, and want to use the framework's workflow and skills going forward.
+
+### What happens
+
+1. **Audit** — explores the project thoroughly: code, docs, conventions, tests, deployment, project maturity
+2. **Map** — compares what exists against every framework artifact in a clear table, categorised as: fine (no changes needed), needs reorganising (content exists but in wrong place/format), or missing (needs creating)
+3. **Plan** — writes a phased adoption plan to `docs/plans/framework-adoption.md`:
+   - Phase 1: Foundation — `CLAUDE.md`, `docs/` structure, retroactive master plan, stack reference
+   - Phase 2: History capture — retroactive ADRs for key decisions already made, changelog from git history
+   - Phase 3: Planning — implementation plan (existing features as completed phases, future work as upcoming phases), task list from issues/TODOs
+   - Phase 4: Design documentation — design guidelines and showcase extracted from existing UI (skipped if no frontend)
+   - Phase 5: Operations — UAT scenarios for existing features, deployment docs, deploy skill
+4. **Execute** — works through the plan conversationally, creating each artifact from the existing codebase rather than from a blank slate
+5. **Verify** — confirms everything's in place, then hands off to the normal workflow
+
+### Key principles
+
+- **No code changes** — only documentation and configuration are created. Your application code is untouched.
+- **Preserves existing conventions** — if your project uses Black, the framework uses Black. It adapts to your project, not the other way around.
+- **Retroactive docs reflect reality** — the master plan describes what IS built, not a hypothetical. The implementation plan marks existing features as done.
+- **Skip what doesn't apply** — no frontend means no design system. CLI tool means no UI-focused UAT scenarios.
+- **Phases are optional** — Phase 1 (foundation) is the minimum. The rest depends on your goals.
+
+### What gets created
+
+- `CLAUDE.md` — project conventions derived from existing code and config
+- `docs/definition/master-plan.md` — product specification (retroactive, from README and codebase)
+- `docs/definition/stack.md` — tech stack reference (generated from project config)
+- `docs/definition/implementation-plan.md` — completed phases for existing features, future phases for planned work
+- `docs/definition/design-guidelines.md` — design system extracted from existing UI (if frontend)
+- `docs/definition/design-system.html` — interactive showcase (if frontend)
+- `docs/tasks.md` — task list from issues, TODOs, and planned work
+- `docs/uat.md` — UAT scenarios for existing features
+- `docs/changelog.md` — project history from git log
+- `docs/decisions/` — retroactive ADRs for key technical decisions
+- `docs/deployment/first-time-setup.md` — existing deployment process documented
+- `.claude/skills/deploy-[project]/SKILL.md` — deploy skill for ongoing use
+- `.claude/settings.local.json` — Claude Code permissions
+
+After adoption, you can use all the ongoing skills: `/work`, `/status`, `/new-issue`, `/implement`, `/uat`, and `/deploy-[project]`.
+
+---
+
 ## Utility Skills
 
 Skills used throughout the project lifecycle, not tied to a specific step.
 
 | Skill | Description |
 |-------|-------------|
-| `/adopt` | Retroactively apply the framework to an existing project. Audits what exists, maps it against framework expectations, and creates a plan to fill gaps — preserving existing code and conventions. |
 | `/new-issue` | Quickly capture a bug, feature idea, or improvement to `docs/tasks.md` without breaking your current flow. Designed for speed — log it and get back to work. |
 | `/status` | Check where the project stands — implementation progress, open tasks, UAT results, recent activity — and get a recommendation for what to do next. |
 
