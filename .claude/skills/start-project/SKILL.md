@@ -50,13 +50,16 @@ The framework uses [Claude Code skills](https://docs.anthropic.com/en/docs/claud
    git clone https://github.com/petebulley/claude-code-framework.git ~/claude-code-framework
    ```
 
-2. **Add the framework skills to your Claude Code config.** Run this from any directory:
+2. **Symlink the framework skills into your global Claude skills directory.** This makes them available in every Claude Code session, regardless of which project you're working in:
 
    ```bash
-   claude config add skills_paths ~/claude-code-framework/.claude/skills
+   mkdir -p ~/.claude/skills
+   for skill in ~/claude-code-framework/.claude/skills/*/; do
+     ln -sf "$skill" ~/.claude/skills/
+   done
    ```
 
-   This makes all framework skills (`/start-project`, `/cto`, `/designer`, etc.) available in every Claude Code session, regardless of which project you're working in.
+   This creates symlinks in `~/.claude/skills/` pointing back to the cloned repo, so the skills stay git-tracked and updatable.
 
 3. **Start a new project.** Create your project directory, open Claude Code, and type:
 
