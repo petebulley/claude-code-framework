@@ -327,6 +327,7 @@ The CLAUDE.md should include:
 6. **Documentation rules** — the documentation principles (ADRs, plans in `/docs/plans`, changelog updates, tests with code)
 7. **Testing rules** — framework, co-location, what to test, coverage expectations
 8. **Key files** — pointers to important documents (master plan, implementation plan, design guidelines, stack reference)
+9. **Workflow** — reference `docs/process.md` for the full project workflow and available skills. If the user seems unsure what to do next, suggest they run `/status` to see where the project stands and what to do next
 
 Keep the CLAUDE.md concise and actionable. It should be a reference that Claude can scan quickly, not a novel. Link to detailed documents rather than duplicating their content.
 

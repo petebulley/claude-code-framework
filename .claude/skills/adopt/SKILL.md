@@ -273,7 +273,7 @@ This is the most important artifact. Build it from:
 4. **Codebase patterns** — identify naming conventions, API patterns, error handling approaches from the actual code
 5. **Conversation with user** — fill gaps for anything not discoverable from the codebase
 
-Follow the same structure as the `/cto` skill would produce, but derived from what exists rather than decided from scratch. If conventions are inconsistent or missing, discuss with the user and agree on the standard going forward.
+Follow the same structure as the `/cto` skill would produce (including a **Workflow** section referencing `docs/process.md` and suggesting `/status` when the user is unsure what to do next), but derived from what exists rather than decided from scratch. If conventions are inconsistent or missing, discuss with the user and agree on the standard going forward.
 
 ### Creating the master plan (retroactive)
 
