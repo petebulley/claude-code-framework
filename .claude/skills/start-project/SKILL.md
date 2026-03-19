@@ -23,6 +23,7 @@ docs/
   decisions/
   plans/
   deployment/
+  reference/
 ```
 
 All markdown files should be created empty (no content yet), **except** `docs/process.md` which should be populated with the process content below. This is the team's standard process document — it tells anyone working on the project (including Claude in future sessions) what the overall workflow is, which skills to use, and what comes next.
@@ -124,8 +125,9 @@ Scaffold the project documentation and create the master plan.
 
 ### What happens
 1. Scaffold the `/docs` directory structure with empty files and sub-directories
-2. Walk through an interactive process to define and document the master plan
-3. Configure Claude Code permissions based on user's risk appetite (`.claude/settings.local.json`)
+2. Prompt the user to add any existing documentation or references to `docs/reference/`
+3. Walk through an interactive process to define and document the master plan
+4. Configure Claude Code permissions based on user's risk appetite (`.claude/settings.local.json`)
 
 ### What gets created
 
@@ -142,6 +144,7 @@ docs/
   decisions/
   plans/
   deployment/
+  reference/
 ```
 
 ---
@@ -362,9 +365,13 @@ This framework is open source and actively improved based on real-world usage. I
 The most useful feedback is specific: which skill, what happened, what you expected, and what would have been better.
 </process-content>
 
-After creating the structure, confirm to the user:
+After creating the structure, confirm to the user and prompt them to add any existing reference material:
 
 > Project docs scaffolded. Ready to work on the master plan.
+>
+> **Before we start:** if you have any existing documentation, references, or background material for this project — specs, briefs, wireframes, research, competitor analysis, API docs, brand guidelines, or anything else that provides context — drop them into `docs/reference/`. I'll use them to inform the master plan conversation, so the more context I have, the better the outcome.
+
+Wait for the user to confirm they've added files (or have none to add). If they add files, read everything in `docs/reference/` before proceeding to Step 2 so you can incorporate the context throughout the master plan conversation.
 
 ## Step 2: Create the master plan
 
