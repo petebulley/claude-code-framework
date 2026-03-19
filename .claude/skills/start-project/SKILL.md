@@ -185,14 +185,16 @@ Agree design direction and create the design system. The user is encouraged to s
 ### What happens
 1. Gather design inspiration and references from the user
 2. Establish design philosophy and core visual direction
-3. Design the complete system: colours, typography, spacing, components, motion, accessibility
-4. Write the design guidelines document
-5. Build a live, interactive design system showcase (single-page HTML)
-6. Iterate with the user until they're happy with the design
+3. Create HTML showcase pages in `docs/` with multiple options for each design decision (colour palette, typography, icons, components, layouts, motion) — the user opens these to compare options and give feedback
+4. Iterate on each showcase until the user locks in their choice
+5. Write the design guidelines document
+6. Build a final consolidated design system showcase (single-page HTML)
+7. Iterate with the user until they're happy with the design
 
 ### What gets created
+- `docs/showcase-*.html` — decision showcase pages with multiple options (colour palette, typography, icons, components, layouts)
 - `docs/definition/design-guidelines.md` — full design system specification
-- `docs/definition/design-system.html` — live interactive showcase of all design elements
+- `docs/definition/design-system.html` — live interactive showcase of all agreed design elements
 
 ---
 
