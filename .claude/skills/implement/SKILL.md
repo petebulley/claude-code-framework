@@ -4,7 +4,7 @@ description: Implement a phase of the project, one phase at a time, with plannin
 
 # Implement
 
-You are implementing the project one phase at a time, following the implementation plan. Each invocation of this skill works on a single phase. You plan before you code, you test as you go, and you keep all documentation up to date.
+You are implementing the project following the implementation plan. By default, each invocation works on a single phase — but the user can choose fully autonomous mode to keep working through phases without interruption, using worktrees to implement independent phases in parallel where possible. You plan before you code, you test as you go, and you keep all documentation up to date.
 
 **Prerequisites:** The following documents must exist before running this skill:
 - `docs/definition/master-plan.md` — the product specification
@@ -42,6 +42,68 @@ Present the user with a progress overview:
 If a phase is partially complete, offer to continue it. If all tasks in the current phase are done, move to the next.
 
 The user can also request a specific phase if they want to work out of order (though dependencies should be respected).
+
+### Choose execution mode
+
+After showing the progress table, ask the user how they'd like to proceed:
+
+> **How would you like to proceed?**
+>
+> 1. **One phase at a time** (default) — I'll implement this phase, then stop for your review
+> 2. **Fully autonomous** — I'll keep working through phases without stopping, using worktrees for parallel phases where possible
+
+If the user chooses **fully autonomous mode**:
+- After completing each phase (Step 7), loop back to Step 1 to identify and begin the next phase automatically
+- Check for parallelisable phases (see below) and use worktrees to implement them concurrently
+- **Stop conditions:** all phases are complete, or a blocker requires user input (ambiguity in the plan, external dependency, conflict with master plan or design guidelines)
+- Still present the Step 7 completion summary for each phase so the user can see progress, but continue immediately rather than waiting
+
+### Detect parallelisable phases (autonomous mode only)
+
+When in autonomous mode, after identifying remaining incomplete phases:
+
+1. Read the Phase Summary table in `docs/definition/implementation-plan.md`, specifically the `Depends on` column
+2. Find all phases whose dependencies are fully satisfied (every phase listed in their `Depends on` column is marked complete)
+3. If **multiple phases** are ready simultaneously, they can be implemented in parallel
+
+**Parallel execution:**
+
+Present the opportunity:
+
+> **Parallel phases detected**
+>
+> These phases have all dependencies satisfied and can run concurrently:
+> - Phase [N]: [Name] (depends on: Phase [X] ✓)
+> - Phase [M]: [Name] (depends on: Phase [X] ✓)
+>
+> I'll implement these in parallel using isolated worktrees, then merge the results.
+
+Use the **Agent tool with `isolation: "worktree"`** to spawn one subagent per parallel phase. Each subagent receives:
+- The full phase specification from the implementation plan
+- Project conventions from `CLAUDE.md`
+- Design guidelines, stack reference, and master plan context
+- Instructions to execute Steps 2–7 of this skill for their assigned phase
+- Instructions to skip user approval gates (plan review in Step 3, task approval in Step 4) since the user has opted into autonomous execution
+
+Wait for all subagents to complete, then merge their branches back to main sequentially:
+- Use `git merge <branch>` for each completed worktree branch
+- Documentation files (`docs/tasks.md`, `docs/uat.md`, `docs/changelog.md`) will likely conflict — resolve by combining both sides
+- For code conflicts, attempt auto-resolution; if unable, flag to the user and pause autonomous execution
+
+After all parallel branches are merged, present a combined summary:
+
+> **Parallel phases complete**
+>
+> | Phase | Name | Tasks | Status |
+> |-------|------|-------|--------|
+> | [N] | [Name] | [X]/[X] | Merged ✓ |
+> | [M] | [Name] | [Y]/[Y] | Merged ✓ |
+>
+> All branches merged successfully. Continuing to next phase...
+
+Then loop back to Step 1 to identify the next set of phases.
+
+If only **one phase** is ready, proceed with it normally through Steps 2–7 (no worktree needed for a single phase).
 
 ## Step 2: Understand the current state
 
@@ -330,12 +392,41 @@ Present a summary to the user:
 > **How to test locally:** [brief local testing instructions]
 >
 > Please test the phase locally and let me know if anything needs adjusting before we move on.
->
+
+### What happens next depends on execution mode
+
+**One-at-a-time mode (default):**
+
 > **Next phase:** Phase [N+1] — [Name]. Run `/implement` when you're ready to continue.
 
 If the implementation plan indicates this is a good point for deployment (e.g. after the foundation phase or after MVP phases are complete), suggest running `/first-deploy`:
 
 > This is a good point to deploy to production. Run `/first-deploy` to create the deployment guide and set up the project deploy skill.
+
+**Autonomous mode:**
+
+If there are remaining incomplete phases, display a brief transition and loop back to Step 1:
+
+> **Continuing autonomously to Phase [N+1]: [Name]...**
+
+If all phases are complete, present a final summary:
+
+> **All phases complete**
+>
+> The implementation plan is fully complete. All [count] phases have been implemented, tested, and documented.
+>
+> **Next steps:**
+> - Run `/uat` to walk through acceptance tests in production
+> - Run `/first-deploy` if not yet deployed
+> - Run `/status` for a full project overview
+
+If a blocker is encountered during autonomous execution (ambiguity, external dependency, conflict with master plan), pause and explain:
+
+> **Autonomous execution paused**
+>
+> [Explanation of the blocker]
+>
+> Please resolve this and run `/implement` to resume.
 
 ## Guidelines
 
@@ -360,7 +451,7 @@ If the implementation plan indicates this is a good point for deployment (e.g. a
 
 ### What NOT to do
 - Do NOT skip writing tests — every phase includes tests
-- Do NOT implement multiple phases at once — one phase per invocation
+- Do NOT implement multiple phases at once unless the user has chosen autonomous mode
 - Do NOT skip the planning step — always create a plan in `/docs/plans` before coding
 - Do NOT leave tasks.md stale — update it as you go
 - Do NOT ignore the design guidelines — UI work must match the spec

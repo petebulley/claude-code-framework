@@ -4,13 +4,32 @@ description: Start a work session — pick up a task from the backlog or work on
 
 # Work
 
-You are helping the user work on the project. This is the skill used for all ongoing development after the initial build — bug fixes, new features, tweaks, and refactors. It ensures that the same principles from the initial build (plan before code, tests alongside code, documentation as you go) apply to every change, scaled appropriately to the size of the work.
+You are helping the user work on the project. This is the skill used for all ongoing development after the initial build — bug fixes, new features, tweaks, and refactors. Each session runs in an isolated git worktree so that multiple `/work` sessions can run concurrently on different tasks without interfering with each other. It ensures that the same principles from the initial build (plan before code, tests alongside code, documentation as you go) apply to every change, scaled appropriately to the size of the work.
 
 **Prerequisites:**
 - The project must have been through at least the initial build phases
 - `CLAUDE.md` must exist (project conventions)
 - `docs/tasks.md` must exist (task backlog)
 - `docs/definition/master-plan.md`, `docs/definition/design-guidelines.md`, and `docs/definition/stack.md` should exist
+
+## Step 0: Start worktree
+
+Each `/work` session runs in an isolated git worktree so that multiple sessions can work on different tasks concurrently without interfering with each other.
+
+Explain the approach to the user:
+
+> **Work sessions use isolated branches**
+>
+> Each `/work` session runs on its own branch via a git worktree. This means:
+> - All your changes are isolated from main until you're ready
+> - You can run multiple `/work` sessions in parallel on different tasks
+> - When we're done, I'll merge your branch back to main
+>
+> Let's pick what to work on, then I'll create the branch.
+
+**Don't enter the worktree yet** — wait until Step 1 completes so the branch can be named after the task (e.g. `fix-auth-redirect`, `feature-export-csv`).
+
+If already in a worktree (e.g. the user manually entered one), skip this step and proceed normally.
 
 ## Step 1: What are we working on?
 
@@ -57,6 +76,12 @@ Ask the user to describe what they want to do. Then classify the work:
 Confirm the classification with the user:
 
 > That sounds like a **[bug fix / new feature / tweak / refactor]**. Is that right?
+
+### Enter worktree
+
+Now that the task is identified, use `EnterWorktree` to create an isolated worktree. Name the branch descriptively based on the task — e.g. `fix-login-redirect`, `feature-dark-mode`, `refactor-auth-middleware`, `tweak-button-spacing`.
+
+If already in a worktree, skip this.
 
 ## Step 2: Understand the context
 
@@ -275,6 +300,28 @@ Update documentation based on the type of work:
 > **Tests:** [Count] new/updated tests — all passing
 > **Documentation:** [What was updated]
 >
+### Merge to main
+
+With the work complete and verified, merge the worktree branch back to main:
+
+1. Ensure all changes are committed on the worktree branch
+2. Present the merge to the user:
+
+> **Ready to merge**
+>
+> All work on `<branch-name>` is complete and verified. I'll merge this into main now.
+>
+> Or if you'd prefer to keep the branch for a PR review, let me know.
+
+3. Use `ExitWorktree` to return to the main working directory
+4. Merge the branch: `git merge <branch-name>`
+5. If the merge is clean, delete the branch: `git branch -d <branch-name>`
+6. If there are merge conflicts, help the user resolve them
+
+> **Merged to main** — branch `<branch-name>` has been merged and cleaned up.
+
+If the session was not in a worktree (e.g. it was skipped), skip this merge step.
+
 > **Next steps:**
 > - **Deploy** — run `/deploy-[project]` to push this to production
 > - **UAT** — run `/uat` to test [new/fixed feature] in production
