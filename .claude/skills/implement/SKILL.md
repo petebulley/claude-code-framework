@@ -85,12 +85,15 @@ Use the **Agent tool with `isolation: "worktree"`** to spawn one subagent per pa
 - Instructions to execute Steps 2–7 of this skill for their assigned phase
 - Instructions to skip user approval gates (plan review in Step 3, task approval in Step 4) since the user has opted into autonomous execution
 
-Wait for all subagents to complete, then merge their branches back to main sequentially:
-- Use `git merge <branch>` for each completed worktree branch
-- Documentation files (`docs/tasks.md`, `docs/uat.md`, `docs/changelog.md`) will likely conflict — resolve by combining both sides
-- For code conflicts, attempt auto-resolution; if unable, flag to the user and pause autonomous execution
+Wait for all subagents to complete, then merge their branches back to main sequentially using the PR flow:
 
-After all parallel branches are merged, present a combined summary:
+For each completed worktree branch:
+1. **Sync with main** — the subagent's worktree may be stale if an earlier branch was already merged. From the worktree (or by checking it out), run `git fetch origin main && git merge origin/main`. If there are conflicts, resolve them — documentation files (`docs/tasks.md`, `docs/uat.md`, `docs/changelog.md`) will likely conflict and should be resolved by combining both sides. For code conflicts, attempt auto-resolution; if unable, flag to the user and pause autonomous execution.
+2. **Rename the branch** from `claude/<name>` to `feature/<phase-name>` (e.g. `feature/phase-3-calendar-integration`)
+3. **Push and create PR** — `git push -u origin <branch>` then `gh pr create --base main`
+4. **Merge the PR** — `gh pr merge --merge --delete-branch` (in autonomous mode, merge immediately rather than waiting for review)
+
+After all parallel branches are merged via PRs, present a combined summary:
 
 > **Parallel phases complete**
 >
@@ -202,6 +205,10 @@ Define UAT scenarios for this phase to be added to `docs/uat.md`. These will be 
 - [ ] Update `docs/changelog.md` with phase completion
 - [ ] Update `CLAUDE.md` if new conventions or patterns are established
 - [ ] Update implementation plan to mark phase status
+
+## Security Considerations
+
+[Brief assessment of security-relevant changes in this phase, or "No security-relevant changes in this phase."]
 
 ## Dependencies & Risks
 
@@ -358,12 +365,30 @@ When all tasks for the phase are done:
 1. **Verify all tasks are marked done** in tasks.md
 2. **Run the full test suite** and fix any failures
 3. **Run lint and type checks** and fix any issues
-4. **Run code review** — use the Agent tool to launch the `code-reviewer` agent. It reviews all changes made during this phase for convention adherence, quality issues, simplification opportunities, and test coverage gaps. Address any must-fix and should-fix items before proceeding. Consider items in the "consider" category but don't feel obligated to act on all of them.
+4. **Run code review** — use the Agent tool to launch the `code-reviewer` agent. It reviews all changes made during this phase for scope drift, convention adherence, quality issues, security concerns, and test coverage gaps. Handle findings by category:
+   - **Must fix**: Fix these immediately without asking the user
+   - **Should fix**: Present these as a batch and ask the user which to address
+   - **Consider**: Note these but don't act unless the user asks
 5. **Write UAT scenarios** for this phase in `docs/uat.md`
 6. **Update the changelog** — add a section for this phase in `docs/changelog.md`
 7. **Update the implementation plan** — mark this phase's status as complete
 8. **Update CLAUDE.md** if new patterns, conventions, or important files were established
 9. **Review and update tasks.md** — ensure all tasks are marked 🟩
+
+### Definition of Done checklist
+
+Before declaring a phase complete, verify every item:
+
+- [ ] All plan tasks completed and marked 🟩 in `docs/tasks.md`
+- [ ] All tests passing (full suite, not just new tests)
+- [ ] Lint and type checks clean
+- [ ] Code review complete — all "Must fix" items resolved; "Should fix" items reviewed and dispositioned with user
+- [ ] UAT scenarios written in `docs/uat.md` for user-facing changes
+- [ ] `docs/changelog.md` updated with phase summary
+- [ ] `CLAUDE.md` still accurate (new commands, conventions, patterns reflected)
+- [ ] Implementation plan updated to mark phase as complete
+
+If any item fails, address it before moving on. Don't skip items for speed — catching issues now is cheaper than catching them in UAT or production.
 
 ### Local testing guide
 
@@ -453,6 +478,12 @@ If a blocker is encountered during autonomous execution (ambiguity, external dep
 - Show progress clearly — the user should always know what you're working on and what's next
 - Flag blockers immediately — don't silently skip tasks
 - Ask for clarification when the plan or master plan is ambiguous rather than guessing
+
+### Worktree safety rules (parallel phases)
+- **Never** `git checkout main` in a worktree — it will fail and is never needed
+- **Never** direct merge from a worktree — always use the PR flow (push, `gh pr create`, `gh pr merge`)
+- **Always** sync with main before pushing each parallel branch — this is critical when merging the second (and subsequent) branches, since the first branch's merge will have changed main
+- Conflicts during sync are **expected** for parallel phases — especially in shared docs files. Resolve by combining both sides.
 
 ### What NOT to do
 - Do NOT skip writing tests — every phase includes tests

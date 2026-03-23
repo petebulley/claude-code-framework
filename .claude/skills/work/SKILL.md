@@ -267,7 +267,10 @@ After implementation:
 2. **Run lint and type checks** — must be clean
 3. **Run the build** — must succeed
 4. **Visually verify** (if UI work and Playwright MCP is available) — open the app and check
-5. **Run code review** — use the Agent tool to launch the `code-reviewer` agent. It reviews all changes for convention adherence, quality issues, simplification opportunities, and test coverage gaps. Address any must-fix and should-fix items before proceeding.
+5. **Run code review** — use the Agent tool to launch the `code-reviewer` agent. It reviews all changes for scope drift, convention adherence, quality issues, security concerns, and test coverage gaps. Handle findings by category:
+   - **Must fix**: Fix these immediately without asking the user
+   - **Should fix**: Present these as a batch and ask the user which to address
+   - **Consider**: Note these but don't act unless the user asks
 
 Use the exact commands from `CLAUDE.md` or the project's package.json/Makefile.
 
@@ -309,25 +312,92 @@ Update documentation based on the type of work:
 >
 ### Merge to main
 
-With the work complete and verified, merge the worktree branch back to main:
+With the work complete and verified, merge the worktree branch back to main.
 
-1. Ensure all changes are committed on the worktree branch
-2. Present the merge to the user:
+#### 1. Detect environment
 
-> **Ready to merge**
+Check whether we're in a worktree:
+
+```bash
+[ -f .git ] && echo "worktree" || echo "main repo"
+```
+
+If `.git` is a file (not a directory), we're in a worktree. This determines the merge strategy below.
+
+#### 2. Sync with main (worktree only)
+
+**This is the critical safety step.** If in a worktree, sync with the latest main before pushing — this prevents one worktree from silently overwriting another's changes:
+
+```bash
+git fetch origin main && git merge origin/main
+```
+
+If there are merge conflicts, **STOP and help the user resolve them**. Conflicts here mean another worktree (or direct work on main) changed the same files. Resolving them now is what prevents silent overwrites later.
+
+**Never** run `git checkout main` in a worktree — it will fail because main is checked out in the main working directory.
+
+#### 3. Rename branch
+
+Worktree branches are created as `claude/<worktree-name>`. Rename to follow project conventions before pushing:
+
+| Work type | Branch prefix | Example |
+|-----------|--------------|---------|
+| Bug fix | `fix/` | `fix/login-redirect` |
+| Feature | `feature/` | `feature/dark-mode` |
+| Refactor | `refactor/` | `refactor/auth-middleware` |
+| Tweak | `tweak/` | `tweak/button-spacing` |
+
+```bash
+git branch -m <new-branch-name>
+```
+
+If the branch is already named correctly (e.g. the user named it manually), skip the rename.
+
+#### 4. Push and create PR
+
+```bash
+git push -u origin <branch-name>
+gh pr create --base main --title "<PR title>" --body "<description>"
+```
+
+The PR title should be a concise summary of the work. The body should include what changed and how it was tested.
+
+Present the PR to the user:
+
+> **PR created: [PR title]**
 >
-> All work on `<branch-name>` is complete and verified. I'll merge this into main now.
+> [PR URL]
 >
-> Or if you'd prefer to keep the branch for a PR review, let me know.
+> Would you like to:
+> 1. **Merge now** — I'll merge the PR and clean up the branch
+> 2. **Wait for review** — keep the PR open for review
 
-3. Use `ExitWorktree` to return to the main working directory
-4. Merge the branch: `git merge <branch-name>`
-5. If the merge is clean, delete the branch: `git branch -d <branch-name>`
-6. If there are merge conflicts, help the user resolve them
+If the user chooses to merge now:
+
+```bash
+gh pr merge --merge --delete-branch
+```
+
+> **Merged** — PR merged and branch cleaned up.
+
+If the user wants to wait for review, leave the PR open.
+
+#### 5. Exit worktree
+
+Use `ExitWorktree` to return to the main working directory.
+
+#### Fallback: direct merge (main repo only)
+
+If the session was **not** in a worktree (e.g. working directly on a branch in the main repo), use direct merge as a fallback:
+
+1. Ensure all changes are committed
+2. `git checkout main && git merge <branch-name>`
+3. If the merge is clean, delete the branch: `git branch -d <branch-name>`
+4. If there are merge conflicts, help the user resolve them
 
 > **Merged to main** — branch `<branch-name>` has been merged and cleaned up.
 
-If the session was not in a worktree (e.g. it was skipped), skip this merge step.
+**Never** use direct merge from a worktree — always use the PR flow above.
 
 > **Next steps:**
 > - **Deploy** — run `/deploy-[project]` to push this to production
@@ -347,6 +417,12 @@ The key principle is that the process overhead should match the size of the chan
 | Tweak | No | Optional | No | No |
 | Refactor | No | Optional | If significant | No |
 | New feature | Yes | Yes (full task list) | If decisions made | Yes |
+
+### Worktree safety rules
+- **Never** `git checkout main` in a worktree — it will fail and is never needed
+- **Never** direct merge from a worktree — always use the PR flow
+- **Always** sync with main (`git fetch origin main && git merge origin/main`) before pushing from a worktree — this is the primary mechanism that prevents parallel worktrees from silently overwriting each other's changes
+- Conflicts during the sync step are **expected and valuable** — they mean another worktree changed the same files, and resolving them now prevents data loss
 
 ### What NOT to do
 - Do NOT skip reading the codebase before making changes — understand first, then modify

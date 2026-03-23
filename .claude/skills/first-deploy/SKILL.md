@@ -217,6 +217,14 @@ You are helping the user deploy changes to [Project Name].
 
 [Use the exact commands from the project's package.json/Makefile/etc.]
 
+### Adaptive checks (run based on what changed)
+
+[Check the git diff and run additional checks where relevant:
+ - **Database migrations present?** → Verify migration files are consistent with the ORM's state (e.g. Drizzle journal, Prisma status). Warn the user to review the migration SQL before deploying. Note the rollback approach (see Rollback section below).
+ - **New dependencies added?** → Run the project's audit command (e.g. `npm audit`, `pip audit`) and flag any known vulnerabilities.
+ - **New environment variables referenced?** → Check `.env.example` or equivalent for new entries and remind the user to set them in the hosting platform before deploying.
+ - **Frontend changes?** → Note that design guideline compliance should have been verified in code review.]
+
 ## Step 4: Update changelog
 
 Read `docs/changelog.md` and add an entry for this deployment.
@@ -232,16 +240,36 @@ Format:
 
 Show the changelog entry to the user for approval before writing it.
 
-## Step 5: Commit
+## Step 5: Detect environment and sync
+
+[Check if running in a worktree: `[ -f .git ]` — if .git is a file, we're in a worktree]
+
+**If in a worktree:**
+1. Sync with main before committing: `git fetch origin main && git merge origin/main`
+2. If there are merge conflicts, STOP and help resolve — conflicts mean another worktree changed the same files
+3. Never run `git checkout main` in a worktree
+4. Never direct merge from a worktree — always use the PR flow in Step 7
+
+**If on main:** proceed normally to Step 6.
+
+## Step 6: Commit
 
 [Stage changes, generate commit message following project conventions, create commit]
 
-## Step 6: Push to deploy
+## Step 7: Push to deploy
 
+**If in a worktree (PR flow):**
+1. Rename branch from `claude/<name>` to project convention (e.g. `deploy/<date>` or `fix/<description>`): `git branch -m <new-name>`
+2. Push: `git push -u origin <branch>`
+3. Create PR: `gh pr create --base main --title "<title>" --body "<changelog summary>"`
+4. Ask user: merge now (`gh pr merge --merge --delete-branch`) or wait for review
+5. If merged and using push-to-deploy, deployment triggers automatically
+
+**If on main (direct push):**
 [Confirm with user before pushing]
 [Push to the deployment branch]
 
-## Step 7: Post-deploy steps
+## Step 8: Post-deploy steps
 
 [Project-specific post-deploy actions:
  - Database migrations (if not automatic)
@@ -251,12 +279,20 @@ Show the changelog entry to the user for approval before writing it.
 
 [Tell the user what will happen automatically and what they need to do manually]
 
-## Step 8: Verify
+## Step 9: Verify
 
 [How to verify the deployment succeeded:
  - Health check URL
  - Where to monitor deploy progress
  - What to check in the application]
+
+## If something goes wrong
+
+[Project-specific rollback guidance:
+ - **Quick rollback**: How to revert to the previous deployment (e.g. platform rollback button, `git revert` + push, redeploy previous commit)
+ - **Database rollback**: If this deployment included migrations, how to revert them (e.g. ORM rollback command, or note if manual SQL is needed). If the migration is not reversible, state that clearly.
+ - **What to check**: Key user flows and health endpoints to verify after rollback
+ - **When to rollback vs fix forward**: If the issue is minor and the fix is obvious, fix forward. If the issue is unclear or affecting users, rollback first, investigate second.]
 ```
 
 ### Customisation requirements
@@ -268,6 +304,8 @@ The deploy skill must be **completely specific to this project**. Include:
 - The exact hosting platform monitoring URL
 - Any project-specific pre-deploy or post-deploy steps
 - The changelog update step (always include this)
+- **Worktree detection and safety** — the skill must detect worktrees and use the PR flow (never direct merge from a worktree)
+- **Branch naming conventions** — the project's branch prefix conventions (e.g. `fix/`, `feature/`, `deploy/`)
 
 ### Present the deploy skill
 

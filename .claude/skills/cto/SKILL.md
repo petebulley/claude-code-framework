@@ -197,6 +197,17 @@ Define:
 - Logging approach
 - How external service failures are handled
 
+### 3.8 Security Conventions
+
+Define the project's baseline security approach:
+- **Secrets management** — where secrets are stored (`.env.local`, hosting platform env vars), what goes in `.env.example` (placeholder values, never real secrets), and what's in `.gitignore`
+- **Input validation** — where validation happens (API boundary, form submission, or both), which library (Zod, joi, etc.), and the principle: validate at the boundary, trust internally
+- **Authentication pattern** — how auth state is checked on protected routes/endpoints (middleware, wrapper, per-route guard)
+- **Authorisation pattern** — how role/permission checks work and where they're enforced
+- **Dependency policy** — prefer well-maintained packages with regular releases; run `npm audit` / `pip audit` (or equivalent) as part of CI or pre-deploy checks
+
+This doesn't need to be exhaustive — it establishes the patterns that the code reviewer and phase planner will check against.
+
 ## Step 4: Create the implementation plan
 
 Using the master plan and all agreed technical decisions, break the project into sequenced implementation phases. This is the most important output of the CTO step.
@@ -323,7 +334,7 @@ The CLAUDE.md should include:
 2. **Tech stack summary** — key technologies (with reference to `docs/definition/stack.md` for full detail)
 3. **Project structure** — directory layout and where things live
 4. **Development commands** — how to run dev server, tests, lint, build, migrate
-5. **Conventions** — all the conventions established in Step 3 (naming, API design, database patterns, error handling, etc.)
+5. **Conventions** — all the conventions established in Step 3 (naming, API design, database patterns, error handling, security, etc.)
 6. **Documentation rules** — the documentation principles (ADRs, plans in `/docs/plans`, changelog updates, tests with code)
 7. **Testing rules** — framework, co-location, what to test, coverage expectations
 8. **Key files** — pointers to important documents (master plan, implementation plan, design guidelines, stack reference)

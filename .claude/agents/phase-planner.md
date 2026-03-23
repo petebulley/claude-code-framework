@@ -107,6 +107,17 @@ UAT scenarios for this phase, to be added to `docs/uat.md`. Written from the use
 - [ ] Update `CLAUDE.md` if new patterns or conventions are established
 - [ ] Update implementation plan to mark phase status
 
+## Security Considerations
+
+[Brief assessment of security-relevant changes in this phase. Consider:
+- Authentication or authorisation changes (new routes, role checks, session handling)
+- User input handling (forms, file uploads, query parameters, API endpoints)
+- Data exposure risks (new API responses, logging, error messages that might leak internals)
+- New dependencies (are they well-maintained? any known vulnerabilities?)
+- Secrets or credentials (new env vars, API keys, tokens)
+
+If no security-relevant changes: state "No security-relevant changes in this phase." Don't pad with theoretical concerns.]
+
 ## Dependencies & Risks
 
 [Any risks, unknowns, or external dependencies. Be specific — "the payment API might have rate limits" not "there might be issues".]
@@ -123,6 +134,8 @@ Every plan you produce must meet these standards:
 - **Dependencies are explicit**: If task B depends on task A, the ordering makes this clear
 - **UAT scenarios are user-focused**: Written as step-by-step instructions a non-technical person can follow, with observable expected outcomes
 - **Documentation tasks are included**: Changelog, tasks.md, ADRs, CLAUDE.md updates are tasks, not afterthoughts
+- **Completeness over shortcuts**: When there's a choice between handling fewer edge cases or more, plan for more. If new enum values or constants are introduced, include a task to grep for all sibling usage and handle the new value everywhere. Don't gold-plate, but don't cut corners on correctness — the cost of thoroughness is low when AI is doing the implementation
+- **Security is considered**: Every phase plan must include a brief security consideration (see below) — even if the conclusion is "no security-relevant changes in this phase"
 
 ## Output
 
