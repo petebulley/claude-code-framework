@@ -2,7 +2,7 @@
 
 A repeatable process for starting and running projects in [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Use this as the starting point for all new projects, and share with your team so everyone follows the same workflow.
 
-The framework uses [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) — reusable prompt templates that guide Claude through each step with consistent quality. You invoke them by typing `/skill-name` in Claude Code.
+The framework uses [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) — reusable prompt templates that guide Claude through each step with consistent quality. You invoke them by typing `/skill-name` in Claude Code. Skills are backed by custom [sub-agents](https://docs.anthropic.com/en/docs/claude-code/sub-agents) that handle autonomous tasks like code review, project auditing, and phase planning.
 
 ## Getting Started
 
@@ -18,16 +18,19 @@ The framework uses [Claude Code skills](https://docs.anthropic.com/en/docs/claud
    git clone https://github.com/petebulley/claude-code-framework.git ~/claude-code-framework
    ```
 
-2. **Symlink the framework skills into your global Claude skills directory.** This makes them available in every Claude Code session, regardless of which project you're working in:
+2. **Symlink the framework skills and agents into your global Claude directories.** This makes them available in every Claude Code session, regardless of which project you're working in:
 
    ```bash
-   mkdir -p ~/.claude/skills
+   mkdir -p ~/.claude/skills ~/.claude/agents
    for skill in ~/claude-code-framework/.claude/skills/*/; do
      ln -sf "$skill" ~/.claude/skills/
    done
+   for agent in ~/claude-code-framework/.claude/agents/*.md; do
+     ln -sf "$agent" ~/.claude/agents/
+   done
    ```
 
-   This creates symlinks in `~/.claude/skills/` pointing back to the cloned repo, so the skills stay git-tracked and updatable.
+   This creates symlinks pointing back to the cloned repo, so skills and agents stay git-tracked and updatable.
 
 3. **Start a new project.** Create your project directory, open Claude Code, and type:
 
@@ -63,7 +66,7 @@ Since you cloned the repo, you can pull updates at any time:
 cd ~/claude-code-framework && git pull
 ```
 
-Updated skills are available immediately in your next Claude Code session — no reconfiguration needed.
+Updated skills and agents are available immediately in your next Claude Code session — no reconfiguration needed.
 
 ---
 

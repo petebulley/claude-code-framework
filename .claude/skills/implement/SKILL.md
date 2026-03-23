@@ -130,9 +130,13 @@ Summarise your understanding to the user:
 
 ## Step 3: Create the phase plan
 
-Create a detailed plan for the phase and write it to `docs/plans/phase-[N]-[name].md`.
+Delegate planning to the **phase-planner agent**. Use the Agent tool to launch the `phase-planner` agent, providing:
+- Which phase to plan (number and name)
+- Your context summary from Step 2 (goal, what's built, key areas, technical notes)
 
-The plan should include:
+The agent reads all prerequisite documents itself and returns a complete plan document plus a task count summary.
+
+Write the agent's plan to `docs/plans/phase-[N]-[name].md`. The plan should follow this structure:
 
 ### Plan structure
 
@@ -354,11 +358,12 @@ When all tasks for the phase are done:
 1. **Verify all tasks are marked done** in tasks.md
 2. **Run the full test suite** and fix any failures
 3. **Run lint and type checks** and fix any issues
-4. **Write UAT scenarios** for this phase in `docs/uat.md`
-5. **Update the changelog** — add a section for this phase in `docs/changelog.md`
-6. **Update the implementation plan** — mark this phase's status as complete
-7. **Update CLAUDE.md** if new patterns, conventions, or important files were established
-8. **Review and update tasks.md** — ensure all tasks are marked 🟩
+4. **Run code review** — use the Agent tool to launch the `code-reviewer` agent. It reviews all changes made during this phase for convention adherence, quality issues, simplification opportunities, and test coverage gaps. Address any must-fix and should-fix items before proceeding. Consider items in the "consider" category but don't feel obligated to act on all of them.
+5. **Write UAT scenarios** for this phase in `docs/uat.md`
+6. **Update the changelog** — add a section for this phase in `docs/changelog.md`
+7. **Update the implementation plan** — mark this phase's status as complete
+8. **Update CLAUDE.md** if new patterns, conventions, or important files were established
+9. **Review and update tasks.md** — ensure all tasks are marked 🟩
 
 ### Local testing guide
 

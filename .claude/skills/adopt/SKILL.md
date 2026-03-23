@@ -10,6 +10,14 @@ This is NOT a greenfield setup. You are retrofitting, not starting from scratch.
 
 ## Step 1: Understand the existing project
 
+Delegate the initial audit to the **project-auditor agent**. Use the Agent tool to launch the `project-auditor` agent — it autonomously explores the entire project (structure, docs, conventions, tests, deployment, maturity) and returns a structured audit report.
+
+While the agent runs, you can ask the user:
+
+> "While I audit the project, what's your goal with adopting the framework? Are you looking for the full treatment (planning docs, design system, implementation plan) or mainly want the ongoing workflow (CLAUDE.md, task tracking, work/deploy skills)?"
+
+When the agent returns, use its report to present your findings (see format below). Supplement with targeted follow-up reads if any area needs more detail.
+
 Explore the project thoroughly before making any recommendations. Read and examine:
 
 ### 1.1 Project basics
@@ -68,7 +76,7 @@ Ask the user:
 
 > "Does this capture the project accurately? Anything I've missed or got wrong?"
 
-Also ask:
+If you haven't already received the user's adoption goals (asked while the agent was running), ask now:
 
 > "What's your goal with adopting the framework? Are you looking for the full treatment (planning docs, design system, implementation plan) or mainly want the ongoing workflow (CLAUDE.md, task tracking, work/deploy skills)?"
 

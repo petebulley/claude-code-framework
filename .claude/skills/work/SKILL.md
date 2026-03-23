@@ -152,7 +152,13 @@ No plan document needed, but state the approach clearly:
 
 ### New features
 
-Create a plan document at `docs/plans/feature-[name].md`. The plan should include:
+Delegate planning to the **phase-planner agent**. Use the Agent tool to launch the `phase-planner` agent, providing:
+- The feature name and description
+- Your context summary from Step 2 (affected areas, relevant patterns, design guidelines)
+
+The agent reads all prerequisite documents itself and returns a complete plan document plus a task count summary. Write the plan to `docs/plans/feature-[name].md`.
+
+The plan should follow this structure:
 
 ```markdown
 # Feature: [Name]
@@ -261,6 +267,7 @@ After implementation:
 2. **Run lint and type checks** — must be clean
 3. **Run the build** — must succeed
 4. **Visually verify** (if UI work and Playwright MCP is available) — open the app and check
+5. **Run code review** — use the Agent tool to launch the `code-reviewer` agent. It reviews all changes for convention adherence, quality issues, simplification opportunities, and test coverage gaps. Address any must-fix and should-fix items before proceeding.
 
 Use the exact commands from `CLAUDE.md` or the project's package.json/Makefile.
 
