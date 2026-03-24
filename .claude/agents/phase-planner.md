@@ -118,6 +118,18 @@ UAT scenarios for this phase, to be added to `docs/uat.md`. Written from the use
 
 If no security-relevant changes: state "No security-relevant changes in this phase." Don't pad with theoretical concerns.]
 
+## Testability
+
+[Analyse whether this phase needs testability mechanisms — things the builder needs in order to test the feature from different perspectives. Consider:
+
+- Does this phase introduce or modify user roles? → Include tasks for test account seeding (dev seed script, production setup instructions) and any role-switching or impersonation capability so the builder can experience the app as each role
+- Does this phase add automated or scheduled features (notifications, digests, reports, cron jobs)? → Include tasks for manual trigger mechanisms (admin API endpoint, CLI command, or admin UI button) so these can be tested on demand without waiting for the schedule
+- Does this phase add external service integrations (Slack, email, payments, SMS)? → Include tasks for sandbox/test mode configuration (test API keys, test channels/recipients, environment variable toggles)
+
+Reference `CLAUDE.md` testability conventions for the project's agreed approach.
+
+If no testability mechanisms are needed: state "No testability mechanisms needed for this phase." Don't pad with theoretical concerns.]
+
 ## Dependencies & Risks
 
 [Any risks, unknowns, or external dependencies. Be specific — "the payment API might have rate limits" not "there might be issues".]
@@ -136,6 +148,7 @@ Every plan you produce must meet these standards:
 - **Documentation tasks are included**: Changelog, tasks.md, ADRs, CLAUDE.md updates are tasks, not afterthoughts
 - **Completeness over shortcuts**: When there's a choice between handling fewer edge cases or more, plan for more. If new enum values or constants are introduced, include a task to grep for all sibling usage and handle the new value everywhere. Don't gold-plate, but don't cut corners on correctness — the cost of thoroughness is low when AI is doing the implementation
 - **Security is considered**: Every phase plan must include a brief security consideration (see below) — even if the conclusion is "no security-relevant changes in this phase"
+- **Testability mechanisms are included**: If the phase introduces new roles, automated features, or external integrations, the plan includes tasks to build the mechanisms needed to test them (test accounts, manual triggers, sandbox modes). Reference `CLAUDE.md` testability conventions for the project's agreed approach
 
 ## Output
 

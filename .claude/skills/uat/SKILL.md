@@ -55,7 +55,17 @@ If ALL tests are marked `✅ Passed`, congratulate the user — UAT is complete!
 
 ## Step 2: Prepare the test environment
 
-Before presenting test steps, analyse the test requirements and provide **explicit setup instructions**. Consider:
+Before presenting test steps, analyse the test requirements and provide **explicit setup instructions**.
+
+### Testability readiness check
+
+Before preparing the specific test environment, read `CLAUDE.md` to check if the project has testability conventions. If it does, verify the required mechanisms are in place before starting any tests:
+
+- **Multiple user roles:** Confirm test accounts exist for each role. If they don't, flag this to the user before proceeding — "This project has [admin, user, etc.] roles, but I can't see test accounts set up. We need test accounts for each role before we can test role-specific scenarios. Should I help create them?" Offer to create them (via seed script, admin panel, or direct database insertion) rather than skipping the affected tests.
+- **Automated/scheduled features:** Confirm manual trigger mechanisms exist for any scheduled features that have UAT scenarios. If they don't, flag this — "The project has [weekly digest / Slack notifications / etc.], but there's no way to trigger them manually. We won't be able to test these scenarios without a manual trigger. I'd recommend pausing UAT and using `/work` to add the trigger, then coming back to continue testing."
+- **External service integrations:** Confirm sandbox/test modes are configured for integrations being tested. If they're not, flag this — "The [Slack / email / payment] integration appears to be using production configuration, not test/sandbox mode. We should switch to test mode before running these scenarios to avoid affecting real users."
+
+If mechanisms are missing, flag them before proceeding to test steps. For test accounts, these can often be created quickly inline. For missing manual triggers or sandbox configuration, recommend the user pauses UAT and uses `/work` to add them first. This is the last line of defence — catching missing testability here is better than discovering mid-test that scenarios can't be completed.
 
 ### Browser and session state
 - **Tests requiring "not logged in":** Instruct the user to open an **Incognito/Private window** (Cmd+Shift+N on Mac, Ctrl+Shift+N on Windows/Linux). Explain why: "This ensures no existing session cookies interfere with the test."

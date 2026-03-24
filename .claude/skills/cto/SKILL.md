@@ -208,6 +208,18 @@ Define the project's baseline security approach:
 
 This doesn't need to be exhaustive — it establishes the patterns that the code reviewer and phase planner will check against.
 
+### 3.9 Testability
+
+Define how the project will be tested from different user perspectives and how automated features will be verified. This is especially important for builders who are less experienced with deployment and testing — without these mechanisms, they get stuck because they can't experience the product the way their users will.
+
+Review the master plan's Testability section (if it exists) for what was identified during `/start-project`. Then establish conventions for:
+
+- **Role testing approach** — If the project has multiple user roles: how test accounts are created (seeded via a script in dev, manually created in production during first deploy), a naming convention for test accounts (e.g. `test-admin@[project].dev`, `test-user@[project].dev`), and whether there's a role-switching or impersonation mechanism for the admin to test other roles without signing out
+- **Manual trigger approach** — If the project has automated or scheduled features (notifications, digests, reports, cron jobs): the pattern for triggering them on demand — an admin API endpoint, a CLI command, or an admin UI button. Also how to verify they ran correctly (logs, status page, test notification channel)
+- **Sandbox/test mode approach** — If the project integrates with external services (Slack, email, payments, SMS): which services have sandbox/test modes, how to toggle between sandbox and production (environment variables), and test-specific channels or recipients (e.g. a `#test-notifications` Slack channel, a catch-all email address for test emails, Stripe test mode)
+
+If the project has none of these (single role, no automated features, no external integrations), state so and skip this section.
+
 ## Step 4: Create the implementation plan
 
 Using the master plan and all agreed technical decisions, break the project into sequenced implementation phases. This is the most important output of the CTO step.
@@ -281,6 +293,7 @@ The plan should follow this format:
 - Each phase should deliver a **usable increment** where possible — something the user can see, interact with, and test. This enables course correction along the way rather than discovering problems late. Even infrastructure phases (like Phase 0) should end with something visible (e.g. a health check endpoint, a deployed shell, a component showcase page).
 - Phases should have **clear dependencies** — the table shows what depends on what
 - Each phase includes its own **testing section** — tests are not a separate phase
+- **Testability mechanisms** are built in the same phase as the features they support — test accounts, manual triggers, and sandbox modes are not deferred to a later phase
 - Break large features into smaller phases rather than having mega-phases
 - Include a **Cross-Cutting Concerns** section for things that apply everywhere
 - Include a **Key Technical Decisions** table listing decisions that need ADRs

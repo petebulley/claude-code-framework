@@ -384,6 +384,7 @@ Before declaring a phase complete, verify every item:
 - [ ] Lint and type checks clean
 - [ ] Code review complete — all "Must fix" items resolved; "Should fix" items reviewed and dispositioned with user
 - [ ] UAT scenarios written in `docs/uat.md` for user-facing changes
+- [ ] Testability mechanisms built for any new roles, automated features, or integrations introduced in this phase (per `CLAUDE.md` testability conventions)
 - [ ] `docs/changelog.md` updated with phase summary
 - [ ] `CLAUDE.md` still accurate (new commands, conventions, patterns reflected)
 - [ ] Implementation plan updated to mark phase as complete

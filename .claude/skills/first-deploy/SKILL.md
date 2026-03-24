@@ -147,6 +147,13 @@ Before starting, you will need:
 ### 5.4 First user sign-in
 [Walk through the first sign-in flow]
 
+### 5.5 Test accounts and testability
+[Only include this section if the project has multiple user roles, automated features, or external integrations — check `CLAUDE.md` testability conventions]
+
+- [ ] Create test accounts for each user role ([list roles and naming convention from CLAUDE.md testability conventions — e.g. `test-admin@project.dev`, `test-user@project.dev`])
+- [ ] Verify manual trigger mechanisms work for automated features ([list each automated feature and how to trigger it manually — e.g. "Visit `/admin/trigger/weekly-digest` to send the digest immediately"])
+- [ ] Verify external services are using test/sandbox credentials — not accidentally pointing at production channels or real recipients ([list each service and what to check — e.g. "Slack messages should go to `#test-notifications`, not `#general`"])
+
 ---
 
 ## 6. Ongoing Deployment

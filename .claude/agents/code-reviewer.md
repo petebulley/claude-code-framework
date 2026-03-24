@@ -55,6 +55,7 @@ For each file in the diff:
    - **Security concerns** — see the security checklist below
    - **Enum/constant completeness** — when the diff introduces new enum values, constants, or type union members, grep for all sibling values across the codebase and verify the new value is handled in every switch/case, mapping, and conditional chain that references its siblings
    - **Documentation drift** — if the diff changes behaviour that's documented in `CLAUDE.md`, `docs/definition/design-guidelines.md`, or `docs/definition/stack.md`, flag that those docs may need updating
+   - **Missing testability mechanisms** — if the diff introduces new user roles, automated features, or external service integrations, check that corresponding testability mechanisms are included (test account seeding, manual trigger endpoints, sandbox mode configuration). Reference `CLAUDE.md` testability conventions
 
 ### 5. Security checklist
 
@@ -70,7 +71,17 @@ For changes that touch user input, authentication, data access, or external inte
 
 Only flag security items where there's a concrete risk in the changed code — don't report theoretical vulnerabilities in unchanged code.
 
-### 6. Confidence scoring
+### 6. Testability check
+
+For changes that introduce new roles, automated features, or external integrations, verify:
+
+- **Role testing** — new roles or permission levels have corresponding test account seeding or a mechanism for the builder to test as each role (e.g. impersonation, role-switching, documented test accounts)
+- **Automated features** — scheduled or automated features have a manual trigger mechanism (admin endpoint, CLI command, or UI button) so they can be tested on demand without waiting for the schedule
+- **External integrations** — external service integrations have sandbox/test mode configuration so they can be verified without side effects (test API keys, test channels/recipients, env var toggles)
+
+Only flag concrete gaps in the changed code — don't report theoretical concerns about unchanged features.
+
+### 7. Confidence scoring
 
 Rate each potential issue 0–100:
 
