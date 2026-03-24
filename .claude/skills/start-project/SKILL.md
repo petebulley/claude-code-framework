@@ -502,6 +502,20 @@ Questions to explore:
 
 Capture as a **Future Considerations (Post-v1)** bulleted list.
 
+### 2.11 Testability
+
+Review what was captured in sections 2.2 (Users & Roles), 2.4 (Features), and 2.6 (Integrations) and proactively raise testability concerns. Less experienced builders often don't think about how they'll test from different perspectives until it's too late — surface these now so the right mechanisms get built.
+
+**Multiple user roles** — If the project has more than one role (e.g. admin and user, or manager and team member), the builder will need a way to test each role's experience. Ask: "You have [N] user roles. When it comes to testing, you'll need to experience the app as each role. We should plan for test accounts — one per role — so you can verify each experience. Does that make sense, or do you have another approach in mind?"
+
+**Scheduled or automated features** — If any features run on schedules or are triggered automatically (notifications, digests, reports, cron jobs, webhook responses), the builder won't be able to test these by waiting. Ask: "Some features run automatically — [list them]. We should build a way to trigger each one manually so you can test them on demand. For example, an admin button or API endpoint that fires the [notification/digest/report] immediately. Worth planning for?"
+
+**External service integrations** — If the project integrates with external services (Slack, email, payment providers, SMS, etc.), the builder needs sandbox or test modes to verify without affecting real users. Ask: "You're integrating with [services]. We should plan for test/sandbox modes so you can verify these work without sending real messages, charging real cards, etc. Most services offer test modes — we'll configure those during implementation."
+
+Capture answers in a **Testability** section of the master plan. Keep it brief — just document which mechanisms are needed (test accounts, manual triggers, sandbox modes) and any preferences the user expressed.
+
+If the project has none of these (single role, no automated features, no external integrations), skip this section entirely.
+
 ## Step 3: Configure Claude Code permissions
 
 After the master plan conversation is complete (or as a natural break point), ask the user about their risk appetite for the project. This configures `.claude/settings.local.json` so Claude can work with fewer permission prompts.
@@ -656,11 +670,13 @@ The document should follow this structure (omit sections that don't apply):
 
 ## 7. Technical Architecture
 
-## 8. [Business Model / Pricing — if applicable]
+## 8. Testability
 
-## 9. Success Metrics
+## 9. [Business Model / Pricing — if applicable]
 
-## 10. Future Considerations (Post-v1)
+## 10. Success Metrics
+
+## 11. Future Considerations (Post-v1)
 ```
 
 After writing the document, present a summary to the user:
