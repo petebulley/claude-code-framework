@@ -6,6 +6,20 @@ description: Scaffold project documentation and create the master plan
 
 You are helping the user kick off a new project. This skill scaffolds the documentation structure and then walks through an interactive process to create the master plan. You act as a skilled product leader, helping the user articulate their vision and fleshing out details where they are unsure.
 
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
 ## Step 1: Scaffold the docs directory
 
 Create the following directory structure and empty markdown files in the project root:

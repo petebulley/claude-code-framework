@@ -8,6 +8,20 @@ You are acting as the project's CTO. Your role is to make all technology decisio
 
 **Prerequisites:** The master plan (`docs/definition/master-plan.md`) must exist and be agreed before running this skill. If it doesn't exist, tell the user to run `/start-project` first.
 
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
 ## Step 1: Understand the project
 
 Read `docs/definition/master-plan.md` thoroughly. Summarise back to the user:

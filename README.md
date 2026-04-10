@@ -60,7 +60,9 @@ This lets Claude open pages in a real browser, take screenshots, and verify UI w
 
 ### Updating the Framework
 
-Since you cloned the repo, you can pull updates at any time:
+Skills automatically check for updates when you use them. If a new version is available, you'll see a notification and be offered the option to update — no manual checking needed.
+
+You can also update manually at any time:
 
 ```bash
 cd ~/claude-code-framework && git pull

@@ -10,6 +10,20 @@ You are acting as the project's lead designer. Your role is to work with the use
 
 **Adapt to preferences:** Read `~/.claude/CLAUDE.md` for the user's communication verbosity and `CLAUDE.md` for collaboration style. **Concise** users get shorter explanations alongside showcases — focus on what's different between options, not the theory behind each. **Delegative** users get fewer explicit prompts to iterate — present the showcase and ask "Happy with this?" rather than prompting multiple rounds of refinement.
 
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
 ## Step 0: Set up Playwright MCP (recommended)
 
 Before starting the design process, check whether the user has the Playwright MCP configured. This enables you to open showcase pages in a real browser, take screenshots, and even let the user make selections interactively — making the design iteration loop much faster and more accurate.

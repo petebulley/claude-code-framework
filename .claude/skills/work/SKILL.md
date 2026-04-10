@@ -12,6 +12,20 @@ You are helping the user work on the project. This is the skill used for all ong
 - `docs/tasks.md` must exist (task backlog)
 - `docs/definition/master-plan.md`, `docs/definition/design-guidelines.md`, and `docs/definition/stack.md` should exist
 
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
 ### Adapt to ways of working
 
 Read the `## Ways of Working` section from `CLAUDE.md` and the `# User Preferences` section from `~/.claude/CLAUDE.md` (if it exists). These preferences shape how this skill operates:
