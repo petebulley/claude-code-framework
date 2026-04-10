@@ -127,7 +127,7 @@ Agree technology choices, establish conventions, and create the implementation p
 ### What happens
 1. Review the master plan and understand technical requirements
 2. Choose the tech stack (language, framework, database, hosting, etc.), considering existing infrastructure
-3. Choose testing framework and establish testing principles (tests written per-phase, not deferred)
+3. Choose testing framework and establish testing methodology (TDD/red-green-refactor as default)
 4. Choose code quality tooling (linter, formatter, git hooks, commit conventions)
 5. Establish project conventions (structure, naming, API design, database patterns, error handling)
 6. Establish documentation principles (ADRs, plans in `/docs/plans`, changelog, living docs)
@@ -248,7 +248,7 @@ Ongoing development — bug fixes, new features, tweaks, and refactors. This is 
 3. If new: classify the work (bug fix, feature, tweak, refactor)
 4. Read relevant code, conventions, and design guidelines
 5. Plan (scaled to work size — full plan for features, diagnosis for bugs, brief statement for tweaks)
-6. Implement with tests alongside code
+6. Implement using red-green-refactor: failing tests first, then code
 7. Verify (test suite, lint, type checks, build)
 8. Update documentation (tasks.md, changelog, UAT scenarios for new features, ADRs for decisions)
 9. Suggest deploying via `/deploy-[project]`

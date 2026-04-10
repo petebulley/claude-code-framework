@@ -4,7 +4,7 @@ description: Start a work session — pick up a task from the backlog or work on
 
 # Work
 
-You are helping the user work on the project. This is the skill used for all ongoing development after the initial build — bug fixes, new features, tweaks, and refactors. Each session runs in an isolated git worktree so that multiple `/work` sessions can run concurrently on different tasks without interfering with each other. It ensures that the same principles from the initial build (plan before code, tests alongside code, documentation as you go) apply to every change, scaled appropriately to the size of the work.
+You are helping the user work on the project. This is the skill used for all ongoing development after the initial build — bug fixes, new features, tweaks, and refactors. Each session runs in an isolated git worktree so that multiple `/work` sessions can run concurrently on different tasks without interfering with each other. It ensures that the same principles from the initial build (plan before code, test-driven development, documentation as you go) apply to every change, scaled appropriately to the size of the work.
 
 **Prerequisites:**
 - The project must have been through at least the initial build phases
@@ -164,7 +164,7 @@ No plan document needed, but state the approach clearly:
 > - **Goal:** [what the refactor achieves — e.g., "extract shared validation logic"]
 > - **Scope:** [which files/modules are affected]
 > - **Behaviour change:** None — existing tests should continue to pass
-> - **New tests:** [any new tests needed]
+> - **New tests:** [If existing coverage is thin, write characterisation tests first to lock current behaviour before refactoring. Otherwise: any new tests needed]
 >
 > I'll refactor and verify all existing tests still pass.
 
@@ -250,7 +250,7 @@ Work through the change, following the project's conventions from `CLAUDE.md`.
 ### All work types
 
 - **Follow established patterns** — look at how the existing codebase handles similar things
-- **Write tests alongside code** — not after, not later, alongside
+- **Write tests before code (red-green-refactor)** — write a failing test that defines the expected behaviour, write the minimal code to pass it, then refactor. This is the default for all work types.
 - **Update `docs/tasks.md`** as you complete tasks (⬜ → 🟧 → 🟩)
 - **Follow the design guidelines** for any UI work
 - **Use Playwright MCP** (if available) to visually verify UI changes
@@ -265,9 +265,11 @@ Work through the change, following the project's conventions from `CLAUDE.md`.
 ### New features specifically
 
 1. Work through tasks in order, marking each as done
-2. Write tests for each piece as you go
+2. For each task, follow red-green-refactor: write a failing test first, implement to pass it, refactor
 3. Record any non-trivial technical decisions as ADRs in `docs/decisions/`
 4. Add UAT scenarios to `docs/uat.md` for user-facing features
+
+**When TDD doesn't apply:** UI layout/styling, configuration-only changes, and exploratory spikes — test after implementation. Default to test-first for everything else.
 
 ### Scope control
 
@@ -448,7 +450,7 @@ The key principle is that the process overhead should match the size of the chan
 
 ### What NOT to do
 - Do NOT skip reading the codebase before making changes — understand first, then modify
-- Do NOT skip tests — every change gets tests, no matter how small
+- Do NOT skip tests — every change gets tests, written before the code where practical (red-green-refactor)
 - Do NOT scope-creep — log other issues via `/new-issue`, stay focused
 - Do NOT skip the verification step — all tests, lint, and build must pass
 - Do NOT forget to update `docs/tasks.md` — it's the source of truth for work status

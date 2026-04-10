@@ -43,7 +43,7 @@ Look for documentation in common locations:
 Identify conventions already in use:
 
 - **Code style** — linter config (ESLint, Biome, Ruff, etc.), formatter config (Prettier, Black, etc.)
-- **Testing** — test framework, test file locations, naming conventions, coverage config
+- **Testing** — test framework, test file locations, naming conventions, coverage config, whether tests are written before code (TDD) or after
 - **Git** — commit message style (check recent commits), branch strategy, hooks
 - **CI/CD** — GitHub Actions, GitLab CI, etc.
 - **Environment** — .env files, Docker, docker-compose
@@ -376,6 +376,7 @@ Include a `## Ways of Working` section with the per-project preferences gathered
 - **Git workflow:** [Branches / Direct to main] — [brief description]
 - **Team:** [Solo / Team of N]
 - **Testing depth:** [Comprehensive / Practical / Minimal] — [brief description]
+- **Testing methodology:** [TDD (red-green-refactor) / Tests alongside / Tests after] — [current practice and recommendation]
 ```
 
 ### Creating the master plan (retroactive)

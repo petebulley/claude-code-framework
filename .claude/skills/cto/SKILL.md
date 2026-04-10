@@ -89,7 +89,7 @@ If the user's existing platform isn't optimal for this project, explain why and 
 
 Recommend a testing framework and establish the testing principle:
 
-> Tests are written as part of each implementation phase, not as a separate phase. Every phase includes tests for the code it introduces. Tests are run as part of the deployment process.
+> The project follows test-driven development (red-green-refactor): write a failing test that defines expected behaviour, write minimal code to pass it, then refactor. Tests come before code, not alongside it. Exceptions: UI layout, configuration, scaffolding, and exploratory spikes are tested after implementation where meaningful.
 
 Decide:
 - Test framework (Vitest, Jest, pytest, etc.)
@@ -100,7 +100,7 @@ Decide:
 
 Also ask about testing depth — this shapes how many test tasks the phase planner generates and how aggressively the code reviewer flags coverage gaps:
 
-> "How rigorous do you want testing to be? Tests are always written alongside code, but we can vary the depth — comprehensive (unit + integration + edge cases, high coverage targets), practical (critical paths and happy paths, reasonable coverage), or minimal (test what's likely to break, skip boilerplate tests for trivial code)."
+> "How rigorous do you want testing to be? We follow TDD (red-green-refactor) by default, but we can vary the depth — comprehensive (unit + integration + edge cases, high coverage targets), practical (critical paths and happy paths, reasonable coverage), or minimal (test what's likely to break, skip boilerplate tests for trivial code)."
 
 Options:
 - **Comprehensive** — unit tests, integration tests, edge cases, high coverage targets
@@ -191,7 +191,7 @@ Establish these principles explicitly:
 2. **Living documentation** — When a change affects existing docs, those docs are updated in the same changeset as the code.
 3. **Plans before code** — When Claude plans anything (a phase, a feature, a refactor), the plan is created as a markdown document in `docs/plans/`, not as a temporary or ephemeral document.
 4. **Changelog** — Notable changes and milestones are logged in `docs/changelog.md`.
-5. **Tests with code** — Tests are written alongside the code they test, in the same phase, not deferred.
+5. **Tests before code (TDD)** — Tests are written before the code they verify, following the red-green-refactor cycle. Exceptions for non-logic work (layout, config, scaffolding).
 
 ### 3.6 State Management (if frontend)
 
@@ -346,7 +346,7 @@ What becomes easier or harder as a result of this decision?
 What other options were evaluated, and why were they not chosen?
 ```
 
-Then create `docs/decisions/001-documentation-first.md` establishing the documentation-first principle (covering ADRs, living docs, plans before code, changelog, tests with code).
+Then create `docs/decisions/001-documentation-first.md` establishing the documentation-first principle (covering ADRs, living docs, plans before code, changelog, TDD/red-green-refactor as the default testing methodology).
 
 ## Step 7: Generate CLAUDE.md
 
@@ -360,7 +360,7 @@ The CLAUDE.md should include:
 4. **Development commands** — how to run dev server, tests, lint, build, migrate
 5. **Conventions** — all the conventions established in Step 3 (naming, API design, database patterns, error handling, security, etc.)
 6. **Documentation rules** — the documentation principles (ADRs, plans in `/docs/plans`, changelog updates, tests with code)
-7. **Testing rules** — framework, co-location, what to test, coverage expectations
+7. **Testing rules** — framework, co-location, TDD as the default methodology (red-green-refactor), what to test, coverage expectations
 8. **Ways of Working** — the per-project preferences gathered during `/start-project` or `/adopt` (collaboration style, git workflow, solo/team) plus the testing depth preference from Step 2.8 above. Format as:
 
 ```markdown
