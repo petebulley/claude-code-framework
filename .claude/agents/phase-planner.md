@@ -64,10 +64,12 @@ Write a complete plan document following this structure:
 
 [Detailed description of what to build. Reference the master plan for feature context and the design guidelines for UI specifics. Note which existing utilities/components/patterns to reuse.]
 
-**Tasks:**
-- [ ] [Specific, actionable task — a developer should be able to start this without asking questions]
-- [ ] [Another task]
-- [ ] ...
+**Tasks (red-green-refactor):**
+- [ ] Write failing tests for [specific behaviour]
+- [ ] Implement [specific thing] to make tests pass
+- [ ] Write failing tests for [next behaviour]
+- [ ] Implement [next thing] to make tests pass
+- [ ] Refactor: [any cleanup needed across this sub-section]
 
 ### [N].2 [Sub-section name]
 
@@ -78,17 +80,15 @@ Write a complete plan document following this structure:
 
 ## Testing
 
+The red-green-refactor cycle is embedded in each sub-section's tasks above. This section covers cross-cutting and integration-level verification not tied to a single sub-section.
+
 Calibrate test volume to the project's **testing depth** preference (provided by the parent skill, or read from `CLAUDE.md` `## Ways of Working`):
 - **Comprehensive** — unit tests for all logic, integration tests for all interactions, edge case tests for boundary conditions. High coverage target.
 - **Practical** (default) — unit tests for critical paths and happy paths, integration tests for key interactions. Skip boilerplate tests for trivial getters/setters or simple pass-through logic.
 - **Minimal** — unit tests only for logic that's likely to break (complex conditionals, data transformations, state management). Skip tests for straightforward CRUD or UI rendering.
 
-### Unit Tests
-- [ ] [Specific test: what to test, what to assert, edge cases to cover]
-- [ ] ...
-
 ### Integration Tests
-- [ ] [Specific test: what systems interact, what to verify]
+- [ ] [Specific cross-cutting test: what systems interact, what to verify]
 - [ ] ...
 
 ### Manual Verification
@@ -145,7 +145,7 @@ If no testability mechanisms are needed: state "No testability mechanisms needed
 Every plan you produce must meet these standards:
 
 - **Tasks are specific and actionable**: "Create the user settings page with theme toggle, notification preferences, and profile section" — not "Build settings"
-- **Every sub-section has corresponding test tasks**: If you add implementation tasks, you must add test tasks that cover them
+- **Every sub-section has test tasks BEFORE implementation tasks**: For each piece of behaviour, list the failing test task first, then the implementation task that makes it pass. This is the red-green-refactor rhythm. Exception: tasks with no testable logic (scaffolding, config, layout) list tests after or omit them
 - **UI work references design guidelines**: Note which design tokens, components, and spacing values to use
 - **Existing code is reused**: If a utility, component, or pattern already exists, reference it by file path rather than asking for a new one to be built
 - **Dependencies are explicit**: If task B depends on task A, the ordering makes this clear

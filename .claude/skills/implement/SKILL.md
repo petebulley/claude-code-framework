@@ -181,9 +181,11 @@ Write the agent's plan to `docs/plans/phase-[N]-[name].md`. The plan should foll
 
 [Detailed description of what to build, referencing master plan and design guidelines]
 
-**Tasks:**
-- [ ] [Specific, actionable task]
-- [ ] [Specific, actionable task]
+**Tasks (red-green-refactor):**
+- [ ] Write failing tests for [specific behaviour]
+- [ ] Implement [specific thing] to make tests pass
+- [ ] Write failing tests for [next behaviour]
+- [ ] Implement [next thing] to make tests pass
 - [ ] ...
 
 ### [N].2 [Sub-section name]
@@ -192,12 +194,10 @@ Write the agent's plan to `docs/plans/phase-[N]-[name].md`. The plan should foll
 
 ## Testing
 
-### Unit Tests
-- [ ] [Specific test to write]
-- [ ] ...
+The red-green-refactor cycle is embedded in each sub-section's tasks above. This section covers cross-cutting and integration-level verification.
 
 ### Integration Tests
-- [ ] [Specific test to write]
+- [ ] [Specific cross-cutting test]
 - [ ] ...
 
 ### Manual Verification
@@ -233,7 +233,7 @@ Define UAT scenarios for this phase to be added to `docs/uat.md`. These will be 
 ### Planning principles
 
 - **Tasks must be specific and actionable** — "Create the user settings page with theme toggle, notification preferences, and profile section" not "Build settings"
-- **Tests are part of the plan, not an afterthought** — every sub-section should have corresponding test tasks
+- **Tests come first in the plan, not alongside** — every sub-section lists its failing test tasks before the implementation tasks that make them pass (red-green-refactor)
 - **Reference the design guidelines** — for any UI work, the plan should note which design tokens, components, and patterns to use
 - **Reference the master plan** — link each piece of work back to the feature it implements
 - **Note any decisions to make** — if the phase requires technical decisions, note them as ADRs to write
@@ -307,19 +307,19 @@ Work through the tasks in the plan, updating `docs/tasks.md` as you go.
 For each sub-section of the plan:
 
 1. **Mark the first task as in progress** (🟧) in tasks.md
-2. **Implement the task** following:
-   - The conventions in `CLAUDE.md`
-   - The patterns established in previous phases
-   - The design guidelines for any UI work
-   - The stack reference for technology choices
-3. **Write tests** for the code you just wrote (co-located with the source, as established in the CTO step)
-4. **Mark the task as done** (🟩) in tasks.md
-5. **Move to the next task**
+2. **Write a failing test** (red) — write a test that defines the expected behaviour. Run it and confirm it fails.
+3. **Write the minimal code to pass** (green) — implement just enough to make the failing test pass. Follow the conventions in `CLAUDE.md`, established patterns, design guidelines, and stack reference.
+4. **Refactor** — clean up the code you just wrote. The test gives you safety to refactor confidently.
+5. **Repeat** for the next behaviour in this sub-section
+6. **Mark the task as done** (🟩) in tasks.md when the sub-section is complete
+7. **Move to the next sub-section**
+
+**When TDD doesn't apply:** Some tasks are genuinely not test-first — initial project scaffolding, UI layout and styling, configuration files, exploratory spikes. For these, write tests after implementation or skip tests if there's no meaningful logic to test. Default to test-first.
 
 ### During implementation
 
 - **Follow established patterns** — look at how previous phases solved similar problems. Maintain consistency.
-- **Write tests alongside code** — don't defer testing to the end of the phase. Each sub-section's code and tests should be done together.
+- **Write tests before code (TDD)** — follow the red-green-refactor cycle. For each behaviour, write a failing test first, then implement to pass it, then refactor.
 - **Record decisions** — if you make a non-trivial technical decision during implementation, write an ADR in `docs/decisions/`. Use the next available number.
 - **Update existing docs** — if your implementation changes anything documented in the master plan, design guidelines, or stack reference, update those docs.
 - **Keep tasks.md current** — update task status as you complete each task, not in batches.
@@ -481,7 +481,7 @@ If a blocker is encountered during autonomous execution (ambiguity, external dep
 ## Guidelines
 
 ### Quality standards
-- Every piece of code should have corresponding tests
+- Every piece of code should have corresponding tests, written before the implementation (red-green-refactor)
 - All tests must pass before marking a phase complete
 - Lint and type checks must be clean
 - Code must follow the conventions in CLAUDE.md
@@ -506,7 +506,7 @@ If a blocker is encountered during autonomous execution (ambiguity, external dep
 - Conflicts during sync are **expected** for parallel phases — especially in shared docs files. Resolve by combining both sides.
 
 ### What NOT to do
-- Do NOT skip writing tests — every phase includes tests
+- Do NOT skip writing tests — every phase includes tests, written before the code they verify (red-green-refactor)
 - Do NOT implement multiple phases at once unless the user has chosen autonomous mode
 - Do NOT skip the planning step — always create a plan in `/docs/plans` before coding
 - Do NOT leave tasks.md stale — update it as you go

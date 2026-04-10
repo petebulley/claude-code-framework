@@ -51,6 +51,7 @@ For each file in the diff:
    - **Code quality issues** — unnecessary complexity, dead code, unclear naming, duplicated logic
    - **Simplification opportunities** — over-engineered abstractions, verbose code that could be clearer, unnecessary indirection
    - **Test coverage gaps** — new logic without corresponding tests, untested edge cases, test files that don't actually assert meaningful behaviour
+   - **TDD adherence** — for new functionality, tests should cover key behaviours and edge cases, not just call functions to hit coverage numbers. If tests look perfunctory (only happy path, no edge cases, assertions that duplicate implementation), flag as a coverage gap
    - **Consistency** — patterns that differ from how the rest of the codebase handles similar things
    - **Security concerns** — see the security checklist below
    - **Enum/constant completeness** — when the diff introduces new enum values, constants, or type union members, grep for all sibling values across the codebase and verify the new value is handled in every switch/case, mapping, and conditional chain that references its siblings
@@ -120,9 +121,9 @@ Simplification opportunities and minor improvements. Same format as above.
 **Action:** Informational only — note them but don't fix unless the user asks.
 
 ### Coverage gaps
-Files or logic paths that lack test coverage. For each:
-- What's untested
-- What test would close the gap
+Files or logic paths that lack test coverage, or where tests appear low-quality (testing implementation details rather than behaviour, missing edge cases). For each:
+- What's untested or weakly tested
+- What test would close the gap (describe the behaviour to assert, not just "add a test for X")
 
 Calibrate to the project's **testing depth** preference (from the `## Ways of Working` section of `CLAUDE.md`): **Comprehensive** — flag every untested path. **Practical** — flag untested critical paths and happy paths only. **Minimal** — only flag logic with zero test coverage. If not set, default to Practical.
 
