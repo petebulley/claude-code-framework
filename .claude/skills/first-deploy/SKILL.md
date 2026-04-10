@@ -19,6 +19,20 @@ You do NOT deploy the project yourself — you create the documentation and auto
 
 **Adapt to preferences:** Read `~/.claude/CLAUDE.md` for the user's technical level and `CLAUDE.md` for git workflow. For **developers**, compress obvious deployment steps (installing CLI tools, creating accounts) into brief pointers. For **non-technical** users, spell out every step with expected output. The deploy skill template should use the project's **git workflow** — if "Direct to main", the deploy skill pushes directly; if "Branches", it assumes a PR-based flow.
 
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
 ## Step 1: Understand the deployment landscape
 
 Read the project documentation to understand:

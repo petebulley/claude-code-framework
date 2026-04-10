@@ -8,6 +8,20 @@ You are helping the user bring an existing project into the framework. The proje
 
 This is NOT a greenfield setup. You are retrofitting, not starting from scratch. Respect the project's existing work, conventions, and history.
 
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
 ## Step 1: Understand the existing project
 
 Delegate the initial audit to the **project-auditor agent**. Use the Agent tool to launch the `project-auditor` agent — it autonomously explores the entire project (structure, docs, conventions, tests, deployment, maturity) and returns a structured audit report.

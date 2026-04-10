@@ -15,6 +15,20 @@ You are guiding the user through manual user acceptance testing of the deployed 
 - `docs/uat.md` must exist with test scenarios (written during `/implement` phases)
 - The project's deploy skill (`/deploy-[project]`) must exist for deploying fixes
 
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
 ## Step 1: Show progress and find the next test
 
 Read `docs/uat.md` and count all tests by status. Present a progress summary:
