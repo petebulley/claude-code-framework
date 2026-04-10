@@ -8,6 +8,8 @@ You are acting as the project's lead designer. Your role is to work with the use
 
 **Prerequisites:** The master plan (`docs/definition/master-plan.md`) and tech stack (`docs/definition/stack.md`) must exist before running this skill. If they don't, tell the user to run `/start-project` and `/cto` first.
 
+**Adapt to preferences:** Read `~/.claude/CLAUDE.md` for the user's communication verbosity and `CLAUDE.md` for collaboration style. **Concise** users get shorter explanations alongside showcases — focus on what's different between options, not the theory behind each. **Delegative** users get fewer explicit prompts to iterate — present the showcase and ask "Happy with this?" rather than prompting multiple rounds of refinement.
+
 ## Step 0: Set up Playwright MCP (recommended)
 
 Before starting the design process, check whether the user has the Playwright MCP configured. This enables you to open showcase pages in a real browser, take screenshots, and even let the user make selections interactively — making the design iteration loop much faster and more accurate.

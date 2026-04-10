@@ -516,6 +516,103 @@ Capture answers in a **Testability** section of the master plan. Keep it brief �
 
 If the project has none of these (single role, no automated features, no external integrations), skip this section entirely.
 
+## Step 2.5: Ways of Working
+
+After the master plan conversation, ask a few quick questions about how the user likes to work. These preferences shape how all framework skills behave — from plan presentation to git workflow to explanation depth.
+
+> "Great, I have a solid picture of the project. Before we configure Claude's permissions, a few quick questions about how you like to work — this helps me adapt across all the skills."
+
+### Returning user detection
+
+First, check whether `~/.claude/CLAUDE.md` already exists (from a previous project using the framework). If it does, read it and summarise the existing per-user preferences:
+
+> "I have your preferences from previous projects — [summary of technical level and communication style]. Still accurate, or want to change anything?"
+
+If accurate, skip to the per-project questions (3 and 4 below). If the user wants to change anything, walk through the relevant per-user questions again.
+
+### Per-user preferences
+
+These follow the user across all projects and are stored in `~/.claude/CLAUDE.md`. **Skip these if the file already exists and the user confirms the preferences are still accurate.**
+
+**Question 1: Technical experience level**
+
+> "How technical are you? I ask because it changes how I explain things — a developer gets terminal commands and code references; someone less technical gets step-by-step walkthroughs. Are you a regular coder, technical but not coding daily, or more on the product/business side?"
+
+Options:
+- **Developer** — writes code regularly, comfortable with terminal, git, and debugging
+- **Technical but not coding daily** — understands code, can read and edit it, but doesn't write it day-to-day
+- **Non-technical** — focuses on product/business, needs clear plain-language explanations
+
+Default if skipped: **Developer**.
+
+This affects explanation depth across `/implement`, `/uat`, `/cto`, `/work`, `/first-deploy`, and `/status`.
+
+**Question 2: Communication verbosity**
+
+> "When I present plans and updates, do you want the full detail or just the headlines? You can always ask for more."
+
+Options:
+- **Detailed** — show everything: full task lists, reasoning, alternatives considered
+- **Concise** — headlines and key decisions only, I'll ask if I want more detail
+
+Default if skipped: **Detailed**.
+
+This affects plan presentations, summaries, and status reports across all skills.
+
+### Per-project preferences
+
+These may differ between projects and are carried forward to the `/cto` skill, which writes them into the project's `CLAUDE.md` under a `## Ways of Working` section.
+
+**Question 3: Collaboration style**
+
+> "For this project, how hands-on do you want to be? Some people like to review every plan before I start building. Others prefer I just get on with it and show the result."
+
+Options:
+- **Collaborative** — review plans before implementation, approve changes, see reasoning
+- **Delegative** — trust the plan, show results, flag blockers
+
+Default if skipped: **Collaborative**.
+
+This affects approval gates in `/implement`, `/work`, `/cto`, and `/designer`.
+
+**Question 4: Git workflow**
+
+> "Git workflow — do you want feature branches for every change, or is committing straight to main fine for this project? Will anyone else be working on this with you?"
+
+Options:
+- **Branches** — feature branches, merge when done. Best for teams or projects where you want to review before merging.
+- **Direct to main** — commit directly to main. Simpler workflow, good for solo projects.
+
+The "anyone else" follow-up captures whether this is solo or team work. Note this alongside the git workflow preference — it affects whether commit messages and PR descriptions need to explain context to others.
+
+Default if skipped: **Branches**.
+
+This affects worktree usage in `/work` and `/implement`, and the deploy skill template in `/first-deploy`.
+
+### Storing the preferences
+
+After gathering the answers:
+
+1. **Per-user preferences** (technical level, communication verbosity): Write to `~/.claude/CLAUDE.md`. If the file already exists, update the `# User Preferences` section. If it doesn't exist, create it with this format:
+
+```markdown
+# User Preferences
+
+- **Technical level:** [Developer / Technical but not coding daily / Non-technical] — [brief description]
+- **Communication:** [Detailed / Concise] — [brief description]
+```
+
+2. **Per-project preferences** (collaboration style, git workflow, solo/team): Note these for the `/cto` skill to include in the project's `CLAUDE.md` when it generates it. Summarise them to the user:
+
+> "Got it. I'll carry these preferences forward — the `/cto` skill will include them in your project's `CLAUDE.md` so every skill picks them up automatically."
+
+### Guidelines
+
+- Ask ONE question at a time, as with all framework conversations
+- Keep it quick — this should take 2-4 minutes (2 questions if returning user, 4 if new)
+- Don't over-explain the options. Present them naturally and move on.
+- If the user doesn't care about a preference ("whatever you think"), use the default and move on
+
 ## Step 3: Configure Claude Code permissions
 
 After the master plan conversation is complete (or as a natural break point), ask the user about their risk appetite for the project. This configures `.claude/settings.local.json` so Claude can work with fewer permission prompts.

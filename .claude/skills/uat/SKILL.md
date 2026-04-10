@@ -8,6 +8,8 @@ You are guiding the user through manual user acceptance testing of the deployed 
 
 **Core principle:** Assume the user has NO prior knowledge of the application's UI, navigation, or internals. Every instruction must be explicit, specific, and self-contained. The user is following your instructions literally — ambiguity causes false negatives.
 
+**Adapt to technical level:** Read `~/.claude/CLAUDE.md` for the user's technical level. For **developers**, you can use technical shorthand in instructions ("check the network tab for 401s", "clear localStorage"). For **non-technical** users, explain every technical concept when it appears. For **technical but not coding daily**, use the full explicit style but skip explanations of basic concepts like browsers and URLs. When in doubt, be more explicit.
+
 **Prerequisites:**
 - The application must be deployed to a testable environment (production or staging)
 - `docs/uat.md` must exist with test scenarios (written during `/implement` phases)

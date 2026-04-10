@@ -17,6 +17,8 @@ You do NOT deploy the project yourself — you create the documentation and auto
 - `docs/definition/implementation-plan.md` must exist (to understand the deployment pipeline design)
 - `CLAUDE.md` must exist (to know project conventions, commands, and structure)
 
+**Adapt to preferences:** Read `~/.claude/CLAUDE.md` for the user's technical level and `CLAUDE.md` for git workflow. For **developers**, compress obvious deployment steps (installing CLI tools, creating accounts) into brief pointers. For **non-technical** users, spell out every step with expected output. The deploy skill template should use the project's **git workflow** — if "Direct to main", the deploy skill pushes directly; if "Branches", it assumes a PR-based flow.
+
 ## Step 1: Understand the deployment landscape
 
 Read the project documentation to understand:

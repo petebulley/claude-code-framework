@@ -15,6 +15,18 @@ You are implementing the project following the implementation plan. By default, 
 
 If any are missing, tell the user which step to run first (`/start-project`, `/cto`, or `/designer`).
 
+### Adapt to ways of working
+
+Read the `## Ways of Working` section from `CLAUDE.md` and the `# User Preferences` section from `~/.claude/CLAUDE.md` (if it exists). These preferences shape how this skill operates:
+
+- **Technical level** (from `~/.claude/CLAUDE.md`) — affects local testing guide detail in Step 7. Developers get terse commands; non-technical users get step-by-step walkthroughs.
+- **Communication verbosity** (from `~/.claude/CLAUDE.md`) — affects plan presentation depth in Step 3 and completion summaries in Step 7. Concise users get headlines with a link to the plan file; detailed users get the full task listing.
+- **Collaboration style** (from `CLAUDE.md`) — affects the execution mode presentation in Step 1. Delegative users see autonomous mode listed first as the recommended option; collaborative users see one-at-a-time first (as currently written).
+- **Git workflow** (from `CLAUDE.md`) — affects worktree usage. If "Direct to main", skip worktree creation for parallel phases and work sequentially on main. Parallel execution with worktrees is only used with "Branches" workflow.
+- **Testing depth** (from `CLAUDE.md`) — passed to the phase-planner agent in Step 3 so it generates the right volume of test tasks (comprehensive = edge cases + high coverage; practical = critical paths; minimal = likely-to-break only).
+
+If these preferences are not set, use defaults: Developer, Detailed, Collaborative, Branches, Practical.
+
 ## Step 1: Show progress and identify the next phase
 
 Read `docs/definition/implementation-plan.md` and `docs/tasks.md` to understand:
@@ -45,7 +57,7 @@ The user can also request a specific phase if they want to work out of order (th
 
 ### Choose execution mode
 
-After showing the progress table, ask the user how they'd like to proceed:
+After showing the progress table, ask the user how they'd like to proceed. If the user's collaboration style is **delegative**, present autonomous mode first as the recommended option. If **collaborative** (or not set), present one-at-a-time first:
 
 > **How would you like to proceed?**
 >
@@ -108,6 +120,8 @@ Then loop back to Step 1 to identify the next set of phases.
 
 If only **one phase** is ready, proceed with it normally through Steps 2–7 (no worktree needed for a single phase).
 
+**Git workflow note:** If the user's git workflow is "Direct to main", skip worktree-based parallel execution entirely. Implement phases sequentially on main, committing directly. The parallel detection and PR merge flow above only applies to "Branches" workflow.
+
 ## Step 2: Understand the current state
 
 Before planning, build a thorough understanding of the project as it stands. Read:
@@ -136,6 +150,7 @@ Summarise your understanding to the user:
 Delegate planning to the **phase-planner agent**. Use the Agent tool to launch the `phase-planner` agent, providing:
 - Which phase to plan (number and name)
 - Your context summary from Step 2 (goal, what's built, key areas, technical notes)
+- The **testing depth** preference (comprehensive / practical / minimal) so the agent calibrates test task volume accordingly
 
 The agent reads all prerequisite documents itself and returns a complete plan document plus a task count summary.
 
@@ -241,6 +256,8 @@ After writing the plan, present a summary to the user:
 > **Risks:** [list any risks]
 >
 > Please review the plan. Once you're happy, I'll add the tasks to `docs/tasks.md` and start implementing.
+
+If the user prefers **concise** communication, shorten this summary to the task count and key risks only, with a pointer to the plan file for full detail. If **detailed** (or not set), show the full listing above.
 
 Wait for the user to approve or request changes. Iterate on the plan if needed.
 
@@ -392,6 +409,8 @@ Before declaring a phase complete, verify every item:
 If any item fails, address it before moving on. Don't skip items for speed — catching issues now is cheaper than catching them in UAT or production.
 
 ### Local testing guide
+
+Adapt the detail level to the user's **technical level**. Developers get terse commands ("run `npm run dev` and check `/settings`"). Non-technical users get step-by-step instructions with explicit descriptions of what to look for. Technical-but-not-daily users get something in between.
 
 Present a clear guide to the user on how to test this phase locally:
 

@@ -98,6 +98,17 @@ Decide:
 - When E2E tests are introduced
 - Coverage expectations
 
+Also ask about testing depth — this shapes how many test tasks the phase planner generates and how aggressively the code reviewer flags coverage gaps:
+
+> "How rigorous do you want testing to be? Tests are always written alongside code, but we can vary the depth — comprehensive (unit + integration + edge cases, high coverage targets), practical (critical paths and happy paths, reasonable coverage), or minimal (test what's likely to break, skip boilerplate tests for trivial code)."
+
+Options:
+- **Comprehensive** — unit tests, integration tests, edge cases, high coverage targets
+- **Practical** — test the critical paths and happy paths, don't chase coverage numbers
+- **Minimal** — test what's likely to break, skip boilerplate tests for trivial code
+
+Default if skipped: **Practical**. Record this in the Ways of Working section of CLAUDE.md (Step 7).
+
 ### 2.9 Code Quality Tooling
 
 Recommend and decide on:
@@ -350,8 +361,21 @@ The CLAUDE.md should include:
 5. **Conventions** — all the conventions established in Step 3 (naming, API design, database patterns, error handling, security, etc.)
 6. **Documentation rules** — the documentation principles (ADRs, plans in `/docs/plans`, changelog updates, tests with code)
 7. **Testing rules** — framework, co-location, what to test, coverage expectations
-8. **Key files** — pointers to important documents (master plan, implementation plan, design guidelines, stack reference)
-9. **Workflow** — reference `docs/process.md` for the full project workflow and available skills. If the user seems unsure what to do next, suggest they run `/status` to see where the project stands and what to do next
+8. **Ways of Working** — the per-project preferences gathered during `/start-project` or `/adopt` (collaboration style, git workflow, solo/team) plus the testing depth preference from Step 2.8 above. Format as:
+
+```markdown
+## Ways of Working
+
+- **Collaboration style:** [Collaborative / Delegative] — [brief description]
+- **Git workflow:** [Branches / Direct to main] — [brief description]
+- **Team:** [Solo / Team of N]
+- **Testing depth:** [Comprehensive / Practical / Minimal] — [brief description]
+```
+
+If the per-project preferences weren't gathered earlier (e.g. the user ran `/cto` directly), ask the collaboration style and git workflow questions now before generating CLAUDE.md. See the `/start-project` Step 2.5 for the questions and options.
+
+9. **Key files** — pointers to important documents (master plan, implementation plan, design guidelines, stack reference)
+10. **Workflow** — reference `docs/process.md` for the full project workflow and available skills. If the user seems unsure what to do next, suggest they run `/status` to see where the project stands and what to do next
 
 Keep the CLAUDE.md concise and actionable. It should be a reference that Claude can scan quickly, not a novel. Link to detailed documents rather than duplicating their content.
 

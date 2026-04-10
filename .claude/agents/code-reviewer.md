@@ -124,6 +124,8 @@ Files or logic paths that lack test coverage. For each:
 - What's untested
 - What test would close the gap
 
+Calibrate to the project's **testing depth** preference (from the `## Ways of Working` section of `CLAUDE.md`): **Comprehensive** — flag every untested path. **Practical** — flag untested critical paths and happy paths only. **Minimal** — only flag logic with zero test coverage. If not set, default to Practical.
+
 If a category has no issues, omit it entirely. If there are no issues at all, say so clearly — a clean review is a valid and useful outcome.
 
 ## What NOT to Do

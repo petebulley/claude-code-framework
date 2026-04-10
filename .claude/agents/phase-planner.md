@@ -78,6 +78,11 @@ Write a complete plan document following this structure:
 
 ## Testing
 
+Calibrate test volume to the project's **testing depth** preference (provided by the parent skill, or read from `CLAUDE.md` `## Ways of Working`):
+- **Comprehensive** — unit tests for all logic, integration tests for all interactions, edge case tests for boundary conditions. High coverage target.
+- **Practical** (default) — unit tests for critical paths and happy paths, integration tests for key interactions. Skip boilerplate tests for trivial getters/setters or simple pass-through logic.
+- **Minimal** — unit tests only for logic that's likely to break (complex conditionals, data transformations, state management). Skip tests for straightforward CRUD or UI rendering.
+
 ### Unit Tests
 - [ ] [Specific test: what to test, what to assert, edge cases to cover]
 - [ ] ...

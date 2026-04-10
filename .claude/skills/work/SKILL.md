@@ -12,7 +12,23 @@ You are helping the user work on the project. This is the skill used for all ong
 - `docs/tasks.md` must exist (task backlog)
 - `docs/definition/master-plan.md`, `docs/definition/design-guidelines.md`, and `docs/definition/stack.md` should exist
 
+### Adapt to ways of working
+
+Read the `## Ways of Working` section from `CLAUDE.md` and the `# User Preferences` section from `~/.claude/CLAUDE.md` (if it exists). These preferences shape how this skill operates:
+
+- **Technical level** — affects diagnosis presentation depth in Step 3 and summary detail.
+- **Communication verbosity** — affects plan presentations, diagnoses, and completion summaries. Concise users get one-liners; detailed users get the full breakdown.
+- **Collaboration style** — affects approval gates. For **delegative** users: skip the "Sound right?" confirmation for bug fixes and tweaks — just fix and report. For **collaborative** users (or not set): present the diagnosis/plan and wait for approval as currently written.
+- **Git workflow** — if "Direct to main", skip worktree creation entirely and work directly on main. Commit directly instead of using branches and PRs. If "Branches" (or not set), use worktrees as currently written.
+- **Testing depth** — passed to the phase-planner agent for new features.
+
+If these preferences are not set, use defaults: Developer, Detailed, Collaborative, Branches, Practical.
+
 ## Step 0: Start worktree
+
+**If the user's git workflow is "Direct to main":** skip this step entirely. Work directly on main — no worktree, no branches, no PRs. At the end of the session (Step 8), commit directly to main instead of creating a PR.
+
+**If the user's git workflow is "Branches" (or not set):**
 
 Each `/work` session runs in an isolated git worktree so that multiple sessions can work on different tasks concurrently without interfering with each other.
 
@@ -127,6 +143,8 @@ No plan document needed. Instead, state your diagnosis and proposed fix:
 > - **Tests:** [what tests you'll add to prevent regression]
 >
 > Sound right? I'll fix it and add a regression test.
+
+If the user's collaboration style is **delegative**, skip the "Sound right?" confirmation — proceed directly to the fix and report the result. If **collaborative** (or not set), wait for approval as above.
 
 ### Tweaks
 
@@ -311,6 +329,10 @@ Update documentation based on the type of work:
 > **Documentation:** [What was updated]
 >
 ### Merge to main
+
+**If the user's git workflow is "Direct to main":** skip the worktree merge flow below. All changes are already on main. Commit directly and present the summary. Skip to "Next steps" below.
+
+**If the user's git workflow is "Branches" (or not set):**
 
 With the work complete and verified, merge the worktree branch back to main.
 

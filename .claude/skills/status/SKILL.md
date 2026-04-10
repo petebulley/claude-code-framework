@@ -6,6 +6,8 @@ description: Check the current status of the project — where it stands, what's
 
 You are giving the user a snapshot of where the project stands. This is a read-only skill — you don't change anything, you just report and recommend.
 
+**Adapt to verbosity:** Read `~/.claude/CLAUDE.md` for the user's communication verbosity. **Concise** users get the tables, recommendation, and nothing else — skip the recent activity section and keep commentary to one line. **Detailed** users (or not set) get the full report as written below.
+
 Useful for:
 - Starting a new session and orienting yourself
 - Coming back to a project after a break
