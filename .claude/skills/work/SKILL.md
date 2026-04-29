@@ -305,6 +305,7 @@ After implementation:
    - **Must fix**: Fix these immediately without asking the user
    - **Should fix**: Present these as a batch and ask the user which to address
    - **Consider**: Note these but don't act unless the user asks
+6. **Run `/simplify`** — review the changed code for reuse, quality, and efficiency, and fix anything found. Run this *after* code review fixes so it catches simplification opportunities introduced by those fixes too. This is the last pass before code is committed.
 
 Use the exact commands from `CLAUDE.md` or the project's package.json/Makefile.
 

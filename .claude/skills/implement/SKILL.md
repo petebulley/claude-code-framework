@@ -352,6 +352,8 @@ If during implementation you discover:
 
 Follow the commit conventions established in the CTO step. Make logical, incremental commits as you complete sub-sections — don't accumulate a massive uncommitted changeset.
 
+**Before every commit, run `/simplify`** on the changed code. This reviews what you just wrote for reuse, quality, and efficiency, and fixes any issues before they're frozen into history. Don't skip this — it's cheaper to simplify uncommitted code than to refactor it later.
+
 ## Step 6: Write UAT scenarios
 
 As part of completing the phase, define user acceptance test scenarios and add them to `docs/uat.md`. These are tests the user will conduct manually in production after deployment (via the `/uat` skill).
@@ -400,11 +402,12 @@ When all tasks for the phase are done:
    - **Must fix**: Fix these immediately without asking the user
    - **Should fix**: Present these as a batch and ask the user which to address
    - **Consider**: Note these but don't act unless the user asks
-5. **Write UAT scenarios** for this phase in `docs/uat.md`
-6. **Update the changelog** — add a section for this phase in `docs/changelog.md`
-7. **Update the implementation plan** — mark this phase's status as complete
-8. **Update CLAUDE.md** if new patterns, conventions, or important files were established
-9. **Review and update tasks.md** — ensure all tasks are marked 🟩
+5. **Run `/simplify`** — review the phase's changed code for reuse, quality, and efficiency, and fix anything found. Run this *after* code review so it catches simplification opportunities introduced by review fixes too. Any commits made before phase completion should also have had `/simplify` applied per the commit discipline above; this run is the final pass before the phase is sealed.
+6. **Write UAT scenarios** for this phase in `docs/uat.md`
+7. **Update the changelog** — add a section for this phase in `docs/changelog.md`
+8. **Update the implementation plan** — mark this phase's status as complete
+9. **Update CLAUDE.md** if new patterns, conventions, or important files were established
+10. **Review and update tasks.md** — ensure all tasks are marked 🟩
 
 ### Definition of Done checklist
 
@@ -414,6 +417,7 @@ Before declaring a phase complete, verify every item:
 - [ ] All tests passing (full suite, not just new tests)
 - [ ] Lint and type checks clean
 - [ ] Code review complete — all "Must fix" items resolved; "Should fix" items reviewed and dispositioned with user
+- [ ] `/simplify` run on the phase's changed code and any findings actioned
 - [ ] UAT scenarios written in `docs/uat.md` for user-facing changes
 - [ ] Testability mechanisms built for any new roles, automated features, or integrations introduced in this phase (per `CLAUDE.md` testability conventions)
 - [ ] `docs/changelog.md` updated with phase summary
