@@ -321,6 +321,27 @@ Skills used throughout the project lifecycle, not tied to a specific step.
 |-------|-------------|
 | `/new-issue` | Quickly capture a bug, feature idea, or improvement to `docs/tasks.md` without breaking your current flow. Designed for speed — log it and get back to work. |
 | `/status` | Check where the project stands — implementation progress, open tasks, UAT results, recent activity — and get a recommendation for what to do next. |
+| `/tone-of-voice` | Build a tone of voice guide from your actual writing, then apply it whenever Claude drafts prose that will be published under your name. |
+
+### Tone of Voice
+
+Most writing Claude produces reads like Claude. That's fine for commit messages and code comments, and a problem for anything with your name on it — a README, a launch post, a strategy doc, an email to the team.
+
+**Skill:** `/tone-of-voice`
+**When:** Before Claude writes prose that will be published as you, or any time a draft "sounds like AI".
+
+The skill has two modes and works out which one applies on its own.
+
+**Create** runs an interview. It asks for three or four things you've actually written, checks where they came from (ghostwritten copy encodes the wrong voice), then *measures* both your writing and the content that prompted the request — sentence length distribution, contraction and hedge rates, punctuation, paragraph shape. The numbers usually contradict the assumption: AI prose is often choppier than the person's, not more verbose, so "keep it short" makes things worse. It then drafts, you correct, and every edit you make becomes a rule. The output separates rules a script can check from rules only a careful read can assess, because they get used differently.
+
+**Apply** reads the guide and writes against it, then checks the draft against the guide's own machine-checkable rules before showing you.
+
+#### What gets created
+
+- `~/.claude/tone-of-voice.md` — your personal voice guide, available in every project
+- `docs/definition/tone-of-voice.md` — optional per-project guide layering extra constraints on top of the personal one
+
+The personal guide lives in `~/.claude/`, not in this repo, so it stays off GitHub.
 
 ---
 

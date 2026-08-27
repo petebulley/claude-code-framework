@@ -2,7 +2,7 @@
 description: Create a tone of voice guide by interviewing the user and measuring how they actually write, or apply an existing guide when drafting prose in their voice. Use when writing content that will be published under the user's name, when prose "sounds like AI", or when the user asks for a voice, tone, or style guide.
 ---
 
-# Tone of voice
+# Tone of Voice
 
 Two modes. Work out which one applies before doing anything.
 
@@ -13,7 +13,8 @@ Two modes. Work out which one applies before doing anything.
 
 Look for a guide in this order and use the first one found:
 
-1. `<project>/docs/definition/tone-of-voice.md` or similar project-local file
+1. `docs/definition/tone-of-voice.md` in the current project — or the nearest
+   equivalent if the project does not follow the framework's docs structure
 2. `~/.claude/tone-of-voice.md`
 
 A project-local guide layers on top of the personal one. It adds constraints; it never
@@ -43,6 +44,27 @@ attribute it to them. Your own messages are yours.
 The output is a guide, written to `~/.claude/tone-of-voice.md` unless the user says
 otherwise. This is an interview, not a research task. Do not go away and produce a
 draft. Ask, wait, and gather real material first.
+
+Tell the user up front that this takes a while — expect 30 to 45 minutes, most of it
+them supplying samples and correcting your drafts. It is not a background task.
+
+### Pre-step: Check for framework updates
+
+Before starting, check if the framework has updates available:
+
+```bash
+SKILL_LINK=$(readlink ~/.claude/skills/tone-of-voice 2>/dev/null) && \
+FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
+[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
+bash "$FRAMEWORK_DIR/bin/check-update.sh"
+```
+
+- If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they
+  agree, run the same command with `--pull` at the end.
+- If there is no output, continue silently — the framework is up to date (or offline).
+
+Skip this in Apply mode. Interrupting someone mid-draft to talk about framework versions
+is not worth it.
 
 ## The failure mode you are trying to avoid
 
@@ -78,8 +100,13 @@ If they can only find one sample, work with one and say so in the guide.
 
 ## Step 2: Measure before you interpret
 
-Compute this, do not estimate it. Compare the user's samples against whatever corpus
-represents the problem, which is usually existing content that prompted the request.
+Compute this, do not estimate it. **Write a script and run it.** Counting by eye
+produces confident, wrong numbers, and every rule downstream rests on these figures.
+Keep the script — you will run it again in Step 4 against your own drafts, and the
+machine-checkable rules in Step 6 need the same tooling to validate their patterns.
+
+Compare the user's samples against whatever corpus represents the problem, which is
+usually existing content that prompted the request.
 
 Strip markup, navigation, headings, tables and boilerplate first, or you will measure
 the tooling instead of the person.
@@ -175,7 +202,8 @@ itself.
 
 ## Step 7: Cover the AI tells, with the right reasoning
 
-Read <https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing> and use it. Pull real
+Read <https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing> and use it. If you
+cannot fetch it, say so and work from the list below instead. Pull real
 examples from the user's problem content rather than listing the tells generically. If a
 tell does not appear in their corpus, say so and keep it as cheap insurance rather than
 presenting it as a live problem.
