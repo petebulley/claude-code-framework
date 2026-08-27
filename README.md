@@ -18,19 +18,13 @@ The framework uses [Claude Code skills](https://docs.anthropic.com/en/docs/claud
    git clone https://github.com/petebulley/claude-code-framework.git ~/claude-code-framework
    ```
 
-2. **Symlink the framework skills and agents into your global Claude directories.** This makes them available in every Claude Code session, regardless of which project you're working in:
+2. **Link the framework skills and agents into your global Claude directories.** This makes them available in every Claude Code session, regardless of which project you're working in:
 
    ```bash
-   mkdir -p ~/.claude/skills ~/.claude/agents
-   for skill in ~/claude-code-framework/.claude/skills/*/; do
-     ln -sf "$skill" ~/.claude/skills/
-   done
-   for agent in ~/claude-code-framework/.claude/agents/*.md; do
-     ln -sf "$agent" ~/.claude/agents/
-   done
+   bash ~/claude-code-framework/bin/link.sh
    ```
 
-   This creates symlinks pointing back to the cloned repo, so skills and agents stay git-tracked and updatable.
+   This creates symlinks pointing back to the cloned repo, so skills and agents stay git-tracked and updatable. It's safe to re-run at any time: it adds what's new, leaves existing links alone, prunes links to anything removed upstream, and won't touch skills of your own that happen to share a name.
 
 3. **Start a new project.** Create your project directory, open Claude Code, and type:
 
@@ -62,13 +56,15 @@ This lets Claude open pages in a real browser, take screenshots, and verify UI w
 
 Skills automatically check for updates when you use them. If a new version is available, you'll see a notification and be offered the option to update — no manual checking needed.
 
-You can also update manually at any time:
+Accepting that offer runs `bin/link.sh` for you afterwards, so an update that adds a *new* skill gets a symlink for it — `git pull` alone can't create one. When that happens you'll be told which skills were added, and you'll need to restart Claude Code before you can use them. Everything else is available immediately in your next session, with no reconfiguration.
+
+To update manually, run both:
 
 ```bash
-cd ~/claude-code-framework && git pull
+cd ~/claude-code-framework && git pull && bash bin/link.sh
 ```
 
-Updated skills and agents are available immediately in your next Claude Code session — no reconfiguration needed.
+`link.sh` is safe to run on its own at any time if links ever get into a strange state.
 
 ---
 

@@ -62,6 +62,19 @@ if [[ "$PULL" == true ]]; then
     echo "UPDATED: Framework updated ($BEHIND new commit(s))."
     echo ""
     echo "$CHANGES"
+
+    # A pull can add or remove skills and agents, which git cannot symlink into
+    # the global Claude directories on its own. Reconcile them, quietly unless
+    # something actually changed.
+    if [[ -f "$SCRIPT_DIR/link.sh" ]]; then
+      LINK_OUTPUT=$(bash "$SCRIPT_DIR/link.sh" --quiet 2>/dev/null) || true
+      if [[ -n "$LINK_OUTPUT" ]]; then
+        echo ""
+        echo "$LINK_OUTPUT"
+        echo ""
+        echo "Restart Claude Code to pick up newly linked skills."
+      fi
+    fi
   else
     echo "UPDATE FAILED: git pull failed. Run manually:"
     echo "  cd $FRAMEWORK_DIR && git pull origin main"
