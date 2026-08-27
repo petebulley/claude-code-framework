@@ -127,7 +127,8 @@ the tooling instead of the person.
 
 **Structure**
 - Paragraph length in sentences, and the share of one-sentence paragraphs
-- How pieces open and how they close
+- How pieces open and how they close, and how each *section* opens, which is where a long
+  document gives you dozens of samples of the same move
 - Verbless or fragment-shaped sentences
 
 Quantify. "Mean 22 words against 16, with a 25% short-sentence rate against 8%" is
@@ -226,6 +227,53 @@ lack a system" rejects one cause and asserts another, which is legitimate and so
 people genuinely write. A rule that cannot tell these apart will fire on the user's own
 sentences and be switched off.
 
+### On openings specifically
+
+**Every guide needs a rule about how pieces and sections open.** Openings carry more of
+the reader's judgement about whether something was machine-written than any other part of
+the text, and they are usually the last thing a voice guide covers, if it covers them at
+all.
+
+The dominant AI opening is the **constructed hypothetical**: an invented person or team,
+in a specific incident, staged before anything is claimed.
+
+> "A head of engineering, technically excellent, works sixty-hour weeks, and everything
+> she delegates comes back needing rework."
+
+> "Two teams in the same building. On the first, nobody says very much."
+
+It is seductive because it looks like the concrete, grounded writing every style guide
+asks for, and because a brief that says "start with a situation the reader recognises"
+seems to demand it. It survives every machine-checkable rule you are likely to write. It
+is also, in most corpora, something the user has never done.
+
+**Check this against the samples before assuming anything.** Grep for staging verbs
+(`Imagine`, `Picture`, `Consider`, `Suppose`, `Let's say`) and read the first two
+sentences of every section. Then extract the opening move the user actually makes, and
+write that down as the rule. Common findings, though the samples decide:
+
+- The subject is named in the first few words, and a claim about it follows in the same
+  sentence.
+- The actors are categories rather than characters: organisations, teams, most companies.
+- The verb is habitual or future, describing a pattern, not narrative describing an
+  occasion.
+- A frequency hedge does the recognition work, letting the reader supply their own
+  instance rather than being handed one.
+- Where a concrete example does appear, it is real and checkable, it grounds an
+  abstraction that has already been stated, and it is followed by where it stops holding.
+
+**Draw the line at category against instance, not at whether a person is mentioned.** A
+generic role inside a general claim ("a manager with a capable team will end up
+prioritising by who is asking") is ordinary writing and many people do it. A character
+with a working week, a headcount and a previous employer is the tell. If your rule cannot
+tell those apart it will fire on the user's own sentences and be switched off.
+
+**Expect this one to resist automation, and say so in the guide.** The obvious pattern,
+an indefinite person as the subject of the first sentence, catches the user's real prose
+too, because the distinguishing feature is the verb's aspect and no regex reads aspect.
+Automate only the explicit staging verbs, report the honest hit count, and put the rest on
+the judgement list with a worked before-and-after. A bad regex here is worse than none.
+
 ### On em dashes specifically
 
 If the user avoids em dashes, establish **why** before writing the rule, because it
@@ -262,7 +310,7 @@ happens once the guide is agreed.
 4. Observed traits, each with a quotation from the user's own writing
 5. What transfers and what does not, if the target writing has a different purpose
 6. Machine-checkable rules, with validated patterns and hit counts
-7. Judgement rules
+7. Judgement rules, including how the user opens a piece and what their opening is not
 8. A worked before-and-after example
 9. Anything recorded as a decision rather than an observed habit, marked as such
 
