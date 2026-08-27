@@ -20,10 +20,12 @@ You are guiding the user through manual user acceptance testing of the deployed 
 Before starting, check if the framework has updates available:
 
 ```bash
-SKILL_LINK=$(readlink ~/.claude/skills/work 2>/dev/null) && \
-FRAMEWORK_DIR=$(dirname "$(dirname "$(dirname "$SKILL_LINK")")") && \
-[ -f "$FRAMEWORK_DIR/bin/check-update.sh" ] && \
-bash "$FRAMEWORK_DIR/bin/check-update.sh"
+FRAMEWORK_DIR=$(for link in ~/.claude/skills/*/; do
+  target=$(readlink "${link%/}" 2>/dev/null) || continue
+  dir=$(dirname "$(dirname "$(dirname "$target")")")
+  [ -f "$dir/bin/check-update.sh" ] && echo "$dir" && break
+done)
+[ -n "$FRAMEWORK_DIR" ] && bash "$FRAMEWORK_DIR/bin/check-update.sh"
 ```
 
 - If the output says **UPDATE AVAILABLE**, tell the user and offer to update now. If they agree, run the same command with `--pull` at the end.
